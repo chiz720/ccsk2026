@@ -124,11 +124,17 @@
     .station-card .st-room { font-size:.7rem; color:var(--day-color); font-weight:600; margin-bottom:3px; }
     .station-card .st-desc { font-size:.75rem; color:#555; }
     .rotation-label { font-size:.7rem; color:#888; font-style:italic; margin:6px 0 2px; }
-    /* ── Workshop scroll row ── */
+    /* ── Scrollable column rows (workshops + parallel sessions) ── */
     .ws-scroll-row { display:flex; overflow-x:auto; gap:10px; padding-bottom:10px;
       -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-bottom:8px; }
     .ws-scroll-row::-webkit-scrollbar { display:none; }
     .ws-col { flex:0 0 88vw; max-width:440px; --day-color:var(--wk-color, var(--blue)); }
+    /* ── Swipe hint ── */
+    .swipe-hint { display:flex; align-items:center; gap:6px; font-size:.75rem;
+      font-weight:700; color:var(--day-color); padding:4px 2px 6px; }
+    .swipe-hint .hand { font-size:1.1rem; display:inline-block;
+      animation:nudge 1.4s ease-in-out infinite; }
+    @keyframes nudge { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
     .lec-group-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
       color:#fff; background:var(--day-color); display:inline-block; padding:2px 8px; border-radius:20px;
       margin:8px 0 4px; opacity:.85; }
@@ -172,7 +178,7 @@
     <div class="time-label">08:00 – 08:30</div>
     <div class="session-card break"><div class="s-title">Registration</div><div class="s-room">Main Lobby</div></div>
 
-    <div class="time-label">08:30 – 17:00 &nbsp;|&nbsp; Pre-Congress Workshops &nbsp;·&nbsp; <small style="font-weight:400;text-transform:none;font-size:.9em;opacity:.8">← swipe to browse →</small></div>
+    <div class="time-label">08:30 – 17:00 &nbsp;|&nbsp; Pre-Congress Workshops</div>
     <div class="ws-scroll-row">
 
       <!-- AM Workshop column -->
@@ -482,7 +488,7 @@
   <div id="day-day1" class="d-none">
 
     <div class="time-label">08:30 – 10:20 &nbsp;|&nbsp; Parallel Sessions</div>
-    <div class="parallel-row">
+    <div class="ws-scroll-row">
       <div>
         <div class="session-card"><span class="session-group">Deriving Cardiac Output · Victoria Hall 1</span>
           <div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr Angela Ongewe &amp; Dr Bancy Mwangi</div>
@@ -513,7 +519,7 @@
     <div class="session-card plenary"><span class="session-group">Plenary 1 · Victoria Hall 1</span><div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr Carolyne Njoki &amp; Dr Anne-Marie Githaiga</div><div class="s-title">Workforce in Critical Care</div><div class="s-speaker">Dr Andrew Toro</div></div>
 
     <div class="time-label">11:55 – 13:20 &nbsp;|&nbsp; Parallel Sessions</div>
-    <div class="parallel-row">
+    <div class="ws-scroll-row">
       <div>
         <div class="session-card"><span class="session-group">Physics Based Resuscitation · Victoria Hall 1</span>
           <div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr Joseph Lelo &amp; Dr Mwanamkasi Tsutsu</div>
@@ -536,7 +542,7 @@
     <div class="session-card break"><div class="s-title">🍽 Lunch</div></div>
 
     <div class="time-label">14:20 – 16:15 &nbsp;|&nbsp; Parallel Sessions</div>
-    <div class="parallel-row">
+    <div class="ws-scroll-row">
       <div>
         <div class="session-card"><span class="session-group">Trauma and the Red Cell · Victoria Hall 1</span>
           <div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr David Odaba &amp; Dr Victor Nyalle</div>
@@ -566,7 +572,7 @@
   <div id="day-day2" class="d-none">
 
     <div class="time-label">08:30 – 10:20 &nbsp;|&nbsp; Parallel Sessions</div>
-    <div class="parallel-row">
+    <div class="ws-scroll-row">
       <div>
         <div class="session-card"><span class="session-group">Renal Salvation · Victoria Hall 1</span>
           <div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr Abdirahman Farah &amp; Dr Betty Sirera</div>
@@ -594,7 +600,7 @@
     <div class="session-card plenary"><span class="session-group">Plenary 2 · Victoria Hall 1</span><div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr Charles Kabetu &amp; Dr Angela Ongewe</div><div class="s-title">Obstetric Critical Care</div><div class="s-speaker">Dr Patrick Olang'</div></div>
 
     <div class="time-label">11:30 – 12:55 &nbsp;|&nbsp; Parallel Sessions</div>
-    <div class="parallel-row">
+    <div class="ws-scroll-row">
       <div>
         <div class="session-card"><span class="session-group">Tiny Tots: Pediatric Critical Care · Victoria Hall 1</span>
           <div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr Wangui Manguyu &amp; Dr Daisy Odundo</div>
@@ -617,7 +623,7 @@
     <div class="session-card break"><div class="s-title">🍽 Lunch</div></div>
 
     <div class="time-label">13:55 – 15:20 &nbsp;|&nbsp; Parallel Sessions</div>
-    <div class="parallel-row">
+    <div class="ws-scroll-row">
       <div>
         <div class="session-card"><span class="session-group">End of Life · Victoria Hall 1</span>
           <div class="s-chairs"><i class="fas fa-user-shield"></i>Chairs: Dr George Njogu &amp; Dr June Mutwiri</div>
@@ -735,6 +741,49 @@
         </div>
       </div>`).join('');
   }
+
+  // ── Parallel-session track colours ────────────────────────────────────────
+  const SESSION_COLORS = {
+    'Deriving Cardiac Output': '#0277bd',
+    'Digital ICU':             '#00695c',
+    'Physics Based':           '#6a1b9a',
+    'Simulation':              '#bf360c',
+    'Trauma':                  '#b71c1c',
+    'Critical Care Within':    '#1a237e',
+    'Renal Salvation':         '#1565c0',
+    'Ventilation and Liberation': '#2e7d32',
+    'Tiny Tots':               '#e65100',
+    'Shock':                   '#880e4f',
+    'End of Life':             '#37474f',
+    'Hot Topics':              '#4a148c',
+  };
+
+  document.querySelectorAll('.ws-scroll-row').forEach(row => {
+    const cols = [...row.children];
+    const isParallel = !cols[0].classList.contains('ws-col');
+
+    // Insert animated swipe hint before the scroll row
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint';
+    hint.innerHTML = isParallel
+      ? '<span class="hand">👉</span> Swipe to see the other track'
+      : '<span class="hand">👉</span> Swipe to browse all workshops';
+    row.parentNode.insertBefore(hint, row);
+
+    // For parallel sessions: add ws-col class + per-track colour
+    if (isParallel) {
+      cols.forEach(col => {
+        col.classList.add('ws-col');
+        const sg = col.querySelector('.session-group');
+        if (sg) {
+          const text = sg.textContent;
+          for (const [key, color] of Object.entries(SESSION_COLORS)) {
+            if (text.includes(key)) { col.style.setProperty('--wk-color', color); break; }
+          }
+        }
+      });
+    }
+  });
 
   // Set initial colour for default tab (Pre-Conference)
   document.documentElement.style.setProperty('--day-color', DAY_COLORS['pre']);
