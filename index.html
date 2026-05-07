@@ -100,6 +100,31 @@
     .speaker-card .sp-title { font-size: .75rem; color: #555; font-style: italic; }
     .speaker-card .sp-org { font-size: .78rem; color: #333; font-weight: 600; margin-top: 3px; }
 
+    /* ── AMV Workshop detail ── */
+    .workshop-detail { background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.1); overflow:hidden; margin-bottom:8px; }
+    .workshop-detail .wk-header { background:var(--day-color); color:#fff; padding:12px 14px; }
+    .workshop-detail .wk-title { font-weight:700; font-size:.95rem; margin-bottom:2px; }
+    .workshop-detail .wk-sub { font-size:.75rem; opacity:.9; }
+    .workshop-detail .wk-faculty { font-size:.75rem; margin-top:6px; opacity:.88; }
+    .workshop-detail .wk-faculty i { margin-right:4px; }
+    .workshop-detail .wk-body { padding:10px 14px; }
+    .wk-section-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.6px;
+      color:var(--day-color); margin:10px 0 4px; }
+    .lecture-item { display:flex; align-items:flex-start; gap:10px; padding:6px 0; border-bottom:1px solid #f0f0f0; }
+    .lecture-item:last-child { border-bottom:none; }
+    .lecture-item .lec-badge { background:var(--day-color); color:#fff; font-size:.62rem; font-weight:700;
+      padding:2px 6px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
+    .lecture-item .lec-info { flex:1; }
+    .lecture-item .lec-title { font-size:.8rem; font-weight:600; color:#111; }
+    .lecture-item .lec-time { font-size:.7rem; color:#888; }
+    .lecture-item .lec-yt { font-size:.7rem; color:var(--day-color); text-decoration:none; display:inline-block; margin-top:2px; }
+    .station-card { border:1px solid #e8e8e8; border-left:4px solid var(--day-color); border-radius:0 8px 8px 0;
+      padding:9px 12px; margin-bottom:6px; background:#fafafa; }
+    .station-card .st-name { font-weight:700; font-size:.82rem; color:#111; }
+    .station-card .st-room { font-size:.7rem; color:var(--day-color); font-weight:600; margin-bottom:3px; }
+    .station-card .st-desc { font-size:.75rem; color:#555; }
+    .rotation-label { font-size:.7rem; color:#888; font-style:italic; margin:6px 0 2px; }
+
     /* ── Footer ── */
     footer { background: var(--blue); color: rgba(255,255,255,.75);
       text-align: center; font-size: .75rem; padding: 16px; margin-top: 32px; }
@@ -143,7 +168,83 @@
       <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 1</span><div class="s-title">Airway Management (AM) Workshop</div><div class="s-speaker">Dr Kevin Umani &amp; Dr Charles Kabetu</div></div>
       <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 2</span><div class="s-title">Point of Care Ultrasound (POCUS) Workshop</div><div class="s-speaker">Dr Susan Mutahi &amp; Dr Romeo Wahome</div></div>
     </div>
-    <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 3</span><div class="s-title">Advanced Mechanical Ventilation (AMV) Workshop</div><div class="s-speaker">Dr Idris Chikophe &amp; Dr Sally Getugi</div></div>
+
+    <!-- AMV Workshop — detailed curriculum -->
+    <div class="workshop-detail">
+      <div class="wk-header">
+        <div class="wk-title">Advanced Mechanical Ventilation: Beyond 6 ml/kg</div>
+        <div class="wk-sub">Victoria Hall 3 &nbsp;|&nbsp; 08:30 – 13:20 &nbsp;|&nbsp; Flipped-Classroom Hybrid</div>
+        <div class="wk-faculty"><i class="fas fa-chalkboard-teacher"></i><strong>Lead:</strong> Dr Idris Chikophe (ICUDemy)</div>
+        <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Sally Getugi &nbsp;·&nbsp; Dr Betty Sirera &nbsp;·&nbsp; Dr Carolyne Njoki &nbsp;·&nbsp; Dr David Odaba</div>
+      </div>
+      <div class="wk-body">
+
+        <div class="wk-section-label">08:30 – 09:00 &nbsp;·&nbsp; Registration &amp; Welcome Coffee</div>
+
+        <div class="wk-section-label">09:00 – 09:30 &nbsp;·&nbsp; Foundational Lectures (Plenary Hall)</div>
+        <div class="lecture-item">
+          <span class="lec-badge">A1</span>
+          <div class="lec-info">
+            <div class="lec-title">The 6 ml/kg Rule — Then and Now</div>
+            <div class="lec-time">09:03 – 09:12 &nbsp;·&nbsp; ARDSNet legacy → driving pressure as the real target</div>
+            <a class="lec-yt" href="https://youtu.be/af4km8sB06A" target="_blank"><i class="fab fa-youtube"></i> Watch lecture</a>
+          </div>
+        </div>
+        <div class="lecture-item">
+          <span class="lec-badge">A2</span>
+          <div class="lec-info">
+            <div class="lec-title">Mechanical Power — The Missing Variable</div>
+            <div class="lec-time">09:12 – 09:21 &nbsp;·&nbsp; MP equation · squaring effect · VILI threshold &gt;12 J/min</div>
+            <a class="lec-yt" href="https://youtu.be/XJz7meShQ3A" target="_blank"><i class="fab fa-youtube"></i> Watch lecture</a>
+          </div>
+        </div>
+        <div class="lecture-item">
+          <span class="lec-badge">A3</span>
+          <div class="lec-info">
+            <div class="lec-title">The Baby Lung — Regional Strain &amp; CT Compartments</div>
+            <div class="lec-time">09:21 – 09:30 &nbsp;·&nbsp; 4-zone aeration model · functional weight · regional strain</div>
+            <a class="lec-yt" href="https://youtu.be/sb82nyjB2uE" target="_blank"><i class="fab fa-youtube"></i> Watch lecture</a>
+          </div>
+        </div>
+
+        <div class="wk-section-label">09:30 – 10:00 &nbsp;·&nbsp; ☕ Tea Break</div>
+
+        <div class="wk-section-label">10:00 – 13:00 &nbsp;·&nbsp; Practical Stations (4 rotations × 45 min)</div>
+        <div class="rotation-label">Delegates rotate through all 4 stations</div>
+
+        <div class="station-card">
+          <div class="st-room">Station 1 &nbsp;·&nbsp; Ventilator Room</div>
+          <div class="st-name">The Inspiratory Pause</div>
+          <div class="st-desc">Perform pause manoeuvre · calculate ΔP &amp; Crs · apply Baby Lung correction · interpret the 5-parameter Safety Dashboard</div>
+        </div>
+        <div class="station-card">
+          <div class="st-room">Station 2 &nbsp;·&nbsp; AI Lab</div>
+          <div class="st-name">Visualise the Multicompartment Lung</div>
+          <div class="st-desc">AI aeration mapping · LUS A/B-line recognition · ΔP compass PEEP step test · prone positioning by ARDS phenotype</div>
+        </div>
+        <div class="station-card">
+          <div class="st-room">Station 3 &nbsp;·&nbsp; Simulation Bay A</div>
+          <div class="st-name">Setting the Ventilator for ARDS</div>
+          <div class="st-desc">APRV setup: P_high · P_low · T_high · T_low titration by peak-flow method · VCV vs APRV case scenarios</div>
+        </div>
+        <div class="station-card">
+          <div class="st-room">Station 4 &nbsp;·&nbsp; Simulation Bay B</div>
+          <div class="st-name">Ventilating the Asthmatic</div>
+          <div class="st-desc">Otis U-curve · ASV %MinVol prescription · auto-PEEP assessment · weaning simulation</div>
+        </div>
+
+        <div class="wk-section-label">13:00 – 13:20 &nbsp;·&nbsp; Summary &amp; Closing</div>
+        <div class="lecture-item">
+          <span class="lec-badge">∑</span>
+          <div class="lec-info">
+            <div class="lec-title">Precision Mechanical Ventilation — The Framework</div>
+            <div class="lec-time">Closing keynote: ΔP · MP · aeration · APRV · ASV · certificates of attendance</div>
+            <a class="lec-yt" href="https://youtu.be/5jQOken2FEU" target="_blank"><i class="fab fa-youtube"></i> Watch lecture</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <div class="time-label">10:00 – 10:30</div>
     <div class="session-card break"><div class="s-title">☕ Tea Break</div></div>
@@ -153,7 +254,6 @@
       <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 1</span><div class="s-title">Airway Management Workshop (continued)</div><div class="s-speaker">Dr Kevin Umani &amp; Dr Charles Kabetu</div></div>
       <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 2</span><div class="s-title">POCUS Workshop (continued)</div><div class="s-speaker">Dr Susan Mutahi &amp; Dr Romeo Wahome</div></div>
     </div>
-    <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 3</span><div class="s-title">AMV Workshop (continued)</div><div class="s-speaker">Dr Idris Chikophe &amp; Dr Sally Getugi</div></div>
 
     <div class="time-label">13:00 – 14:00</div>
     <div class="session-card break"><div class="s-title">🍽 Lunch</div></div>
@@ -163,7 +263,6 @@
       <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 1</span><div class="s-title">Airway Management Workshop (afternoon)</div><div class="s-speaker">Dr Kevin Umani &amp; Dr Charles Kabetu</div></div>
       <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 2</span><div class="s-title">POCUS Workshop (afternoon)</div><div class="s-speaker">Dr Susan Mutahi &amp; Dr Romeo Wahome</div></div>
     </div>
-    <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 3</span><div class="s-title">AMV Workshop (afternoon)</div><div class="s-speaker">Dr Idris Chikophe &amp; Dr Sally Getugi</div></div>
 
     <div class="time-label">15:30 – 16:00</div>
     <div class="session-card break"><div class="s-title">☕ Tea Break</div></div>
