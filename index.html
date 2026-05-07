@@ -8,9 +8,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --blue:  #003087;
-      --red:   #c8102e;
-      --light: #f0f4f8;
+      --blue:    #003087;
+      --red:     #c8102e;
+      --light:   #f0f4f8;
+      --day-color: #003087;   /* updated by JS on tab switch */
     }
     body { background: var(--light); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 
@@ -52,37 +53,36 @@
       border-bottom: 3px solid transparent; margin-bottom: -3px;
       white-space: nowrap; text-align: center;
     }
-    .day-tabs .nav-link.active { color: #fff; border-bottom-color: var(--red); }
+    .day-tabs .nav-link.active { color: #fff; border-bottom-color: var(--day-color); background: rgba(255,255,255,.1); border-radius: 4px 4px 0 0; }
     .day-tabs .nav-link:hover { color: #fff; }
 
     /* ── Session cards ── */
     .session-block { margin-bottom: 10px; }
     .time-label {
-      font-size: .72rem; font-weight: 700; color: var(--blue);
+      font-size: .72rem; font-weight: 700; color: var(--day-color);
       text-transform: uppercase; letter-spacing: .5px;
       padding: 6px 12px 2px; margin-top: 4px;
     }
     .session-card {
       background: #fff;
-      border-left: 4px solid var(--blue);
+      border-left: 4px solid var(--day-color);
       border-radius: 0 8px 8px 0;
       padding: 10px 14px;
       margin-bottom: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
     .session-card.plenary  { border-left-color: var(--red); background: #fff8f8; }
-    .session-card.break    { border-left-color: #aaa; background: #f8f8f8; color: #666; }
-    .session-card.workshop { border-left-color: #0077b6; }
+    .session-card.break    { border-left-color: #ccc; background: #f8f8f8; color: #666; }
+    .session-card.workshop { border-left-color: var(--day-color); }
     .session-card .s-title { font-weight: 700; font-size: .9rem; color: #111; margin-bottom: 2px; }
     .session-card .s-speaker { font-size: .8rem; color: #444; }
-    .session-card .s-room { font-size: .72rem; color: var(--blue); font-weight: 600; margin-top: 3px; }
+    .session-card .s-room { font-size: .72rem; color: var(--day-color); font-weight: 600; margin-top: 3px; }
     .session-card .session-group {
       font-size: .68rem; text-transform: uppercase; letter-spacing: .6px;
-      color: #fff; background: var(--blue);
+      color: #fff; background: var(--day-color);
       display: inline-block; padding: 1px 7px; border-radius: 20px; margin-bottom: 5px;
     }
-    .session-card.workshop .session-group { background: #0077b6; }
-    .session-card.plenary .session-group  { background: var(--red); }
+    .session-card.plenary .session-group { background: var(--red); }
 
     /* ── Parallel layout ── */
     .parallel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
@@ -92,9 +92,9 @@
     .speaker-card {
       background: #fff; border-radius: 10px;
       padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.09);
-      border-top: 3px solid var(--blue);
+      border-top: 3px solid var(--day-color);
     }
-    .speaker-card .sp-name { font-weight: 700; font-size: .9rem; color: var(--blue); }
+    .speaker-card .sp-name { font-weight: 700; font-size: .9rem; color: var(--day-color); }
     .speaker-card .sp-title { font-size: .75rem; color: #555; font-style: italic; }
     .speaker-card .sp-org { font-size: .78rem; color: #333; font-weight: 600; margin-top: 3px; }
 
@@ -384,6 +384,13 @@
     ['Dr Carolyne Njoki','Anaesthesiologist & Critical Care','Aga Khan University Hospital, Nairobi'],
   ];
 
+  const DAY_COLORS = {
+    pre:      '#00838f',   // teal       — Pre-Conference
+    day1:     '#1a237e',   // deep blue  — Conference Day 1
+    day2:     '#2e7d32',   // forest green — Conference Day 2
+    speakers: '#6a1b9a',   // purple     — Speakers
+  };
+
   function showDay(id) {
     ['pre','day1','day2','speakers'].forEach(d => {
       document.getElementById('day-' + d).classList.add('d-none');
@@ -391,6 +398,7 @@
     document.getElementById('day-' + id).classList.remove('d-none');
     document.querySelectorAll('.day-tabs .nav-link').forEach(b => b.classList.remove('active'));
     event.currentTarget.classList.add('active');
+    document.documentElement.style.setProperty('--day-color', DAY_COLORS[id]);
     if (id === 'speakers') renderSpeakers();
     window.scrollTo(0, 0);
   }
@@ -408,14 +416,13 @@
       </div>`).join('');
   }
 
-  // Auto-highlight today's tab
+  // Set initial colour for default tab (Pre-Conference)
+  document.documentElement.style.setProperty('--day-color', DAY_COLORS['pre']);
+
+  // Auto-switch to today's day
   const today = new Date().toISOString().split('T')[0];
-  if (today === '2026-05-13') showDay('pre');
-  else if (today === '2026-05-14') {
-    document.querySelectorAll('.day-tabs .nav-link')[1].click();
-  } else if (today === '2026-05-15') {
-    document.querySelectorAll('.day-tabs .nav-link')[2].click();
-  }
+  if (today === '2026-05-14') document.querySelectorAll('.day-tabs .nav-link')[1].click();
+  else if (today === '2026-05-15') document.querySelectorAll('.day-tabs .nav-link')[2].click();
 </script>
 </body>
 </html>
