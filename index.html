@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCSK 2026 — Scientific Program</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #003087; --accent: #c8102e; }
+        body { background: #f5f5f5; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        .screen { min-height: 100vh; }
+        .auth-container { max-width: 420px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, var(--primary), #1565c0); }
+        .sidebar { min-height: calc(100vh - 56px); }
+        .sidebar .nav-link { padding: 10px 15px; color: #212121; border-radius: 5px; margin: 2px 5px; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: var(--primary); color: white; }
+        .session-card { border-left: 4px solid var(--primary); margin-bottom: 10px; }
+        .badge-preview { width: 300px; padding: 20px; background: white; border: 3px solid var(--primary); border-radius: 10px; text-align: center; margin: 20px auto; }
+        .exhibitor-platinum { border: 2px solid #e5e4e2; background: #f8f8f8; }
+        .exhibitor-gold { border: 2px solid #ffd700; }
+        .exhibitor-silver { border: 2px solid #c0c0c0; }
+        .exhibitor-bronze { border: 2px solid #cd7f32; }
+        @media (max-width: 768px) { .sidebar { position: fixed; left: -100%; width: 250px; z-index: 1000; background: #fff; } .sidebar.show { left: 0; } }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="auth-screen" class="screen">
+            <div class="auth-container">
+                <div class="text-center mb-4">
+                    <img src="ccsk-logo.png" id="logo-img" class="mb-3" style="width:100px;height:100px;object-fit:contain;background:white;border-radius:50%;padding:6px">
+                    <h4 class="text-white" id="conf-title-auth">CCSK 2026</h4>
+                    <p class="text-white-50" id="conf-dates-auth"></p>
+                </div>
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <ul class="nav nav-tabs mb-3" role="tablist">
+                            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab">Login</button></li>
+                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#register-tab">Register</button></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="login-tab">
+                                <form id="login-form">
+                                    <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" id="login-email" required></div>
+                                    <div class="mb-3"><label class="form-label">Password</label><input type="password" class="form-control" id="login-password" required></div>
+                                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                                </form>
+                                <hr><p class="text-center"><small>Admin: admin@ccsk.or.ke / admin123</small></p>
+                            </div>
+                            <div class="tab-pane fade" id="register-tab">
+                                <form id="register-form">
+                                    <div class="mb-3"><label class="form-label">Full Name</label><input type="text" class="form-control" id="reg-name" required></div>
+                                    <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" id="reg-email" required></div>
+                                    <div class="mb-3"><label class="form-label">Organization</label><input type="text" class="form-control" id="reg-org"></div>
+                                    <div class="mb-3"><label class="form-label">Type</label><select class="form-select" id="reg-type"><option value="delegate">Delegate</option><option value="presenter">Presenter</option><option value="speaker">Speaker</option><option value="exhibitor">Exhibitor</option><option value="vip">VIP</option></select></div>
+                                    <div class="mb-3"><label class="form-label">Password</label><input type="password" class="form-control" id="reg-password" required></div>
+                                    <button type="submit" class="btn btn-success w-100">Register</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-screen" class="screen d-none">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar"><span class="navbar-toggler-icon"></span></button>
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                        <img src="ccsk-logo.png" style="height:36px;width:36px;object-fit:contain;background:white;border-radius:50%;padding:2px">
+                        CCSK 2026
+                    </a>
+                    <div class="d-flex">
+                        <div class="dropdown">
+                            <a class="btn btn-sm btn-light dropdown-toggle" href="#" data-bs-toggle="dropdown"><span id="user-name">User</span></a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">My QR Code</a></li>
+                                <li><a class="dropdown-item" href="#myschedule">My Schedule</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logout-btn">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <div class="row">
+                    <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-light">
+                        <div class="position-sticky pt-3">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link active" href="#home"><i class="fas fa-home"></i> Home</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#schedule"><i class="fas fa-calendar"></i> Schedule</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#speakers"><i class="fas fa-microphone"></i> Speakers</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#exhibitors"><i class="fas fa-store"></i> Exhibitors</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#floorplan"><i class="fas fa-map"></i> Floor Plan</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#posters"><i class="fas fa-scroll"></i> Posters</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#attendees"><i class="fas fa-users"></i> Attendees</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#leads"><i class="fas fa-handshake"></i> Leads</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#polls"><i class="fas fa-poll"></i> Polls</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#lostfound"><i class="fas fa-search"></i> Lost & Found</a></li>
+                                <li class="nav-item" id="admin-nav" style="display:none"><a class="nav-link" href="#admin"><i class="fas fa-cog"></i> Admin</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
+                        <div id="view-home" class="view">
+                            <div class="jumbotron bg-gradient text-white p-4 rounded mb-4" style="background: linear-gradient(135deg, var(--primary), #1565c0)">
+                                <h4 id="conf-title">Welcome</h4>
+                                <p id="conf-dates"></p>
+                            </div>
+                            <div class="row text-center mb-4">
+                                <div class="col"><div class="card p-3"><h3>3</h3><small>Days</small></div></div>
+                                <div class="col"><div class="card p-3"><h3>44</h3><small>Speakers</small></div></div>
+                                <div class="col"><div class="card p-3"><h3>40+</h3><small>Presentations</small></div></div>
+                                <div class="col"><div class="card p-3"><h3>3</h3><small>Workshops</small></div></div>
+                            </div>
+                            <h5>Today's Sessions</h5>
+                            <div id="home-sessions"></div>
+                            <a href="#schedule" class="btn btn-outline-primary mt-3">View Full Schedule</a>
+                        </div>
+                        <div id="view-schedule" class="view d-none">
+                            <h4><i class="fas fa-calendar"></i> Schedule</h4>
+                            <ul class="nav nav-pills mb-3" id="day-tabs"></ul>
+                            <div id="schedule-container"></div>
+                        </div>
+                        <div id="view-myschedule" class="view d-none">
+                            <h4><i class="fas fa-calendar-check"></i> My Schedule</h4>
+                            <div id="my-schedule"></div>
+                        </div>
+                        <div id="view-speakers" class="view d-none">
+                            <h4><i class="fas fa-microphone"></i> Speakers</h4>
+                            <div id="speakers-container" class="row g-3"></div>
+                        </div>
+                        <div id="view-exhibitors" class="view d-none">
+                            <h4><i class="fas fa-store"></i> Exhibitors</h4>
+                            <div id="exhibitors-platinum" class="mb-3"></div>
+                            <div id="exhibitors-gold" class="mb-3"></div>
+                            <div id="exhibitors-silver" class="mb-3"></div>
+                            <div id="exhibitors-bronze" class="mb-3"></div>
+                        </div>
+                        <div id="view-floorplan" class="view d-none">
+                            <h4><i class="fas fa-map"></i> Floor Plan</h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col-6 mb-2"><div class="p-3 bg-primary text-white rounded">Victoria Hall 1</div></div>
+                                        <div class="col-6 mb-2"><div class="p-3 bg-success text-white rounded">Victoria Hall 2</div></div>
+                                        <div class="col-6 mb-2"><div class="p-3 bg-warning text-white rounded">Victoria Hall 3</div></div>
+                                        <div class="col-6 mb-2"><div class="p-3 bg-info text-white rounded">Main Lobby</div></div>
+                                        <div class="col-6 mb-2"><div class="p-3 bg-danger text-white rounded">Dining Hall</div></div>
+                                        <div class="col-6 mb-2"><div class="p-3 bg-secondary text-white rounded">Exhibition Area</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="view-posters" class="view d-none">
+                            <h4><i class="fas fa-scroll"></i> Scientific Posters</h4>
+                            <div id="posters-container" class="row g-3"></div>
+                        </div>
+                        <div id="view-attendees" class="view d-none">
+                            <h4><i class="fas fa-users"></i> Attendees</h4>
+                            <input type="text" class="form-control mb-3" id="attendee-search" placeholder="Search...">
+                            <div id="attendees-container" class="row g-3"></div>
+                        </div>
+                        <div id="view-leads" class="view d-none">
+                            <h4><i class="fas fa-handshake"></i> Lead Collection</h4>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <input type="text" class="form-control" id="lead-email" placeholder="Enter attendee email">
+                                    <button class="btn btn-primary mt-2" id="collect-lead-btn">Collect Lead</button>
+                                </div>
+                            </div>
+                            <div id="leads-container"></div>
+                        </div>
+                        <div id="view-polls" class="view d-none">
+                            <h4><i class="fas fa-poll"></i> Live Polls</h4>
+                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#poll-modal">Create Poll</button>
+                            <div id="polls-container"></div>
+                        </div>
+                        <div id="view-lostfound" class="view d-none">
+                            <h4><i class="fas fa-search"></i> Lost & Found</h4>
+                            <ul class="nav nav-tabs mb-3">
+                                <li class="nav-item"><button class="nav-link active" data-type="lost">Lost</button></li>
+                                <li class="nav-item"><button class="nav-link" data-type="found">Found</button></li>
+                            </ul>
+                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#lf-modal">Post Item</button>
+                            <div id="lostfound-container"></div>
+                        </div>
+                        <div id="view-profile" class="view d-none">
+                            <h4><i class="fas fa-qrcode"></i> My QR Code</h4>
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div id="qr-display" class="mb-3"></div>
+                                    <h5 id="profile-name"></h5>
+                                    <p id="profile-type" class="badge bg-primary"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="view-admin" class="view d-none">
+                            <h4><i class="fas fa-cog"></i> Admin Dashboard</h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Conference Settings</div>
+                                        <div class="card-body">
+                                            <input type="text" class="form-control mb-2" id="conf-name" placeholder="Conference Name">
+                                            <input type="date" class="form-control mb-2" id="conf-start">
+                                            <input type="date" class="form-control mb-2" id="conf-end">
+                                            <input type="number" class="form-control mb-2" id="conf-days" placeholder="Days" value="3">
+                                            <input type="number" class="form-control mb-2" id="conf-tracks" placeholder="Tracks" value="3">
+                                            <input type="color" class="form-control mb-2" id="conf-color" value="#1e88e5">
+                                            <button class="btn btn-primary w-100" id="save-conf-btn">Save Settings</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Add Session</div>
+                                        <div class="card-body">
+                                            <input type="date" class="form-control mb-2" id="sess-date" placeholder="Date">
+                                            <input type="time" class="form-control mb-2" id="sess-start-time" placeholder="Start Time">
+                                            <input type="time" class="form-control mb-2" id="sess-end-time" placeholder="End Time">
+                                            <input type="text" class="form-control mb-2" id="sess-title" placeholder="Title">
+                                            <input type="text" class="form-control mb-2" id="sess-speaker" placeholder="Speaker">
+                                            <select class="form-control mb-2" id="sess-track">
+                                                <option value="A">Track A</option>
+                                                <option value="B">Track B</option>
+                                                <option value="C">Track C</option>
+                                                <option value="all">All Tracks (Plenary)</option>
+                                            </select>
+                                            <select class="form-control mb-2" id="sess-type"><option>Lecture</option><option>Workshop</option><option>Plenary</option><option>Coffee</option><option>Meal</option><option>Registration</option></select>
+                                            <input type="text" class="form-control mb-2" id="sess-room" placeholder="Room">
+                                            <button class="btn btn-primary w-100" id="add-sess-btn">Add Session</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Add Speaker</div>
+                                        <div class="card-body">
+                                            <input type="text" class="form-control mb-2" id="speaker-name" placeholder="Name">
+                                            <input type="text" class="form-control mb-2" id="speaker-title" placeholder="Title">
+                                            <input type="text" class="form-control mb-2" id="speaker-org" placeholder="Organization">
+                                            <button class="btn btn-primary w-100" id="add-speaker-btn">Add Speaker</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Add Exhibitor</div>
+                                        <div class="card-body">
+                                            <input type="text" class="form-control mb-2" id="ex-company" placeholder="Company">
+                                            <input type="text" class="form-control mb-2" id="ex-desc" placeholder="Description">
+                                            <select class="form-control mb-2" id="ex-tier"><option>platinum</option><option>gold</option><option>silver</option><option>bronze</option></select>
+                                            <input type="text" class="form-control mb-2" id="ex-booth" placeholder="Booth">
+                                            <button class="btn btn-primary w-100" id="add-ex-btn">Add Exhibitor</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Register Attendee</div>
+                                        <div class="card-body">
+                                            <input type="text" class="form-control mb-2" id="reg-att-name" placeholder="Name">
+                                            <input type="email" class="form-control mb-2" id="reg-att-email" placeholder="Email">
+                                            <input type="text" class="form-control mb-2" id="reg-att-org" placeholder="Organization">
+                                            <select class="form-control mb-2" id="reg-att-type"><option>Delegate</option><option>Presenter</option><option>Speaker</option><option>Exhibitor</option><option>VIP</option></select>
+                                            <button class="btn btn-success w-100" id="reg-att-btn">Register</button>
+                                            <div id="badge-result" class="mt-2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">Website QR</div>
+                                        <div class="card-body text-center">
+                                            <div id="website-qr" class="mb-2"></div>
+                                            <button class="btn btn-primary btn-sm" onclick="window.print()">Print</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-header">Statistics</div>
+                                <div class="card-body text-center">
+                                    <div class="row">
+                                        <div class="col"><h3 id="stat-users">0</h3><small>Users</small></div>
+                                        <div class="col"><h3 id="stat-sessions">0</h3><small>Sessions</small></div>
+                                        <div class="col"><h3 id="stat-speakers">0</h3><small>Speakers</small></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="poll-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h5>Create Poll</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <input type="text" class="form-control mb-2" id="poll-q" placeholder="Question">
+                    <input type="text" class="form-control mb-2 poll-opt" placeholder="Option 1">
+                    <input type="text" class="form-control mb-2 poll-opt" placeholder="Option 2">
+                    <input type="text" class="form-control mb-2 poll-opt" placeholder="Option 3">
+                    <button class="btn btn-primary" id="create-poll-btn">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="lf-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h5>Post Item</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <select class="form-control mb-2" id="lf-type"><option value="lost">Lost</option><option value="found">Found</option></select>
+                    <textarea class="form-control mb-2" id="lf-desc" placeholder="Description"></textarea>
+                    <input type="text" class="form-control mb-2" id="lf-contact" placeholder="Contact">
+                    <button class="btn btn-primary" id="post-lf-btn">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/data.js"></script>
+    <script>
+    const DB = { users: 'ccsk_u', sessions: 'ccsk_s', speakers: 'ccsk_sp', exhibitors: 'ccsk_e', posters: 'ccsk_post', polls: 'ccsk_p', responses: 'ccsk_r', leads: 'ccsk_l', lostfound: 'ccsk_lf', myschedule: 'ccsk_my', settings: 'ccsk_conf' };
+    let user = null;
+
+    function get(k) { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch { return []; } }
+    function set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+    function save(k, v) { var d = get(k); d.push(v); set(k, d); }
+    function getSettings() { try { return JSON.parse(localStorage.getItem(DB.settings) || '{}'); } catch { return {}; } }
+
+    function init() {
+        loadConf();
+        checkAuth();
+        setupEvents();
+    }
+
+    function checkAuth() {
+        try {
+            var u = JSON.parse(localStorage.getItem('ccsk_current'));
+            if (u) { user = u; showMain(); }
+            else { showAuth(); }
+        } catch { showAuth(); }
+    }
+
+    function showAuth() {
+        document.getElementById('auth-screen').classList.remove('d-none');
+        document.getElementById('main-screen').classList.add('d-none');
+    }
+
+    function showMain() {
+        document.getElementById('auth-screen').classList.add('d-none');
+        document.getElementById('main-screen').classList.remove('d-none');
+        document.getElementById('user-name').textContent = user.name;
+        if (user.email === 'admin@ccsk.or.ke' || user.type === 'admin') {
+            document.getElementById('admin-nav').style.display = 'block';
+        }
+        route();
+    }
+
+    function route() {
+        var h = location.hash.slice(1) || 'home';
+        document.querySelectorAll('.view').forEach(v => v.classList.add('d-none'));
+        document.getElementById('view-' + h)?.classList.remove('d-none');
+        document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+        document.querySelector('.sidebar a[href="#' + h + '"]')?.classList.add('active');
+        render(h);
+    }
+
+    function render(v) {
+        var views = { home: renderHome, schedule: renderSchedule, myschedule: renderMySchedule, speakers: renderSpeakers, exhibitors: renderExhibitors, floorplan: renderFloor, posters: renderPosters, attendees: renderAttendees, leads: renderLeads, polls: renderPolls, lostfound: renderLostFound, profile: renderProfile, admin: renderAdmin };
+        views[v]?.();
+    }
+
+    function loadConf() {
+        var c = getSettings();
+        if (!c.name) { c = { name: '13th CCSK Conference', days: 3, tracks: 3, start: '2026-05-13', end: '2026-05-15', color: '#1e88e5' }; set(DB.settings, c); }
+        document.documentElement.style.setProperty('--primary', c.color || '#1e88e5');
+        document.getElementById('conf-title').textContent = c.name;
+        document.getElementById('conf-title-auth').textContent = c.name;
+        document.getElementById('conf-dates').textContent = (c.start || '') + ' - ' + (c.end || '');
+        document.getElementById('conf-dates-auth').textContent = (c.start || '') + ' - ' + (c.end || '');
+    }
+
+    function renderHome() {
+        var s = get(DB.sessions).filter(x => x.day === 1).slice(0, 5);
+        document.getElementById('home-sessions').innerHTML = s.map(x => '<div class="card session-card mb-2 p-2"><b>' + x.title + '</b><br><small>' + (x.startTime || '') + ' - ' + (x.endTime || '') + ' | ' + (x.room || '') + '</small></div>').join('') || '<p>No sessions</p>';
+    }
+
+    function renderSchedule() {
+        var c = getSettings();
+        var days = c.days || 3;
+        var html = '';
+        var dates = [];
+        if (c.start) {
+            for (var d = 0; d < days; d++) {
+                var dt = new Date(new Date(c.start).getTime() + d*86400000);
+                dates.push(dt.toISOString().split('T')[0]);
+                html += '<button class="btn btn-sm btn-outline-primary me-1" onclick="renderDay(\'' + dt.toISOString().split('T')[0] + '\')">' + dt.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + '</button>';
+            }
+        } else {
+            for (var d = 1; d <= days; d++) {
+                dates.push('2026-05-' + (12+d));
+                html += '<button class="btn btn-sm btn-outline-primary me-1" onclick="renderDay(\'2026-05-' + (12+d) + '\')">Day ' + d + '</button>';
+            }
+        }
+        document.getElementById('day-tabs').innerHTML = html;
+        renderDay(dates[0] || '2026-05-13');
+    }
+
+    function renderDay(date) {
+        var s = get(DB.sessions).filter(x => x.date === date).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+        var mySched = get(DB.myschedule).filter(x => x.userId === user?.id);
+        document.getElementById('schedule-container').innerHTML = s.map(x => {
+            var isFav = mySched.some(m => m.sessionId === x.id);
+            return '<div class="card session-card mb-2 p-2"><div class="d-flex justify-content-between"><div><b>' + x.title + '</b><br><small>' + (x.startTime || '') + ' - ' + (x.endTime || '') + ' | ' + (x.room || '') + ' | Track: ' + (x.track || 'A') + '</small></div><button class="btn btn-sm ' + (isFav ? 'btn-danger' : 'btn-outline-secondary') + '" onclick="toggleFav(' + x.id + ')"><i class="fas fa-heart"></i></button></div></div>';
+        }).join('') || '<p>No sessions</p>';
+    }
+
+    function toggleFav(id) {
+        var mySched = get(DB.myschedule);
+        var idx = mySched.findIndex(x => x.userId === user.id && x.sessionId === id);
+        if (idx >= 0) mySched.splice(idx, 1);
+        else mySched.push({ userId: user.id, sessionId: id });
+        set(DB.myschedule, mySched);
+        renderDay(selectedDay || 1);
+    }
+    var selectedDay = 1;
+    window.renderDay = function(d) { selectedDay = d; renderDay(d); };
+
+    function renderMySchedule() {
+        var mySched = get(DB.myschedule).filter(x => x.userId === user?.id);
+        var all = get(DB.sessions);
+        document.getElementById('my-schedule').innerHTML = mySched.map(m => {
+            var s = all.find(x => x.id === m.sessionId);
+            return s ? '<div class="card mb-2 p-2"><b>' + s.title + '</b><br><small>' + s.startTime + (s.endTime ? ' - ' + s.endTime : '') + ' | ' + (s.room || '') + ' | Track: ' + (s.track || 'A') + '</small></div>' : '';
+        }).join('') || '<p>No saved sessions</p>';
+    }
+
+    function renderSpeakers() {
+        var s = get(DB.speakers);
+        document.getElementById('speakers-container').innerHTML = s.map(x => '<div class="col-md-4"><div class="card h-100 p-3"><b>' + x.name + '</b><br><small>' + (x.title || '') + '</small><br><small class="text-muted">' + (x.org || '') + '</small></div></div>').join('') || '<p>No speakers</p>';
+    }
+
+    function renderExhibitors() {
+        var e = get(DB.exhibitors);
+        ['platinum', 'gold', 'silver', 'bronze'].forEach(tier => {
+            var items = e.filter(x => x.tier === tier);
+            var html = items.map(x => '<div class="col-md-6 mb-2"><div class="card p-3 exhibitor-' + tier + '"><b>' + x.company + '</b><br><small>' + (x.desc || '') + '</small><br><small class="text-muted">Booth: ' + (x.booth || 'N/A') + '</small></div></div>').join('');
+            document.getElementById('exhibitors-' + tier).innerHTML = html ? '<h6 class="text-uppercase">' + tier + '</h6><div class="row">' + html + '</div>' : '';
+        });
+    }
+
+    function renderFloor() {}
+
+    function renderPosters() {
+        var p = get(DB.posters);
+        var votes = get(DB.responses).filter(x => x.type === 'poster');
+        document.getElementById('posters-container').innerHTML = p.map(x => {
+            var count = votes.filter(y => y.itemId === x.id).length;
+            return '<div class="col-md-6"><div class="card p-3"><b>' + x.title + '</b><br><small>' + x.author + '</small><br><span class="badge bg-secondary">' + (x.category || '') + '</span><br><button class="btn btn-sm btn-outline-primary mt-2" onclick="votePoster(' + x.id + ')">Vote (' + count + ')</button></div></div>';
+        }).join('') || '<p>No posters</p>';
+    }
+
+    function votePoster(id) {
+        var votes = get(DB.responses);
+        if (votes.some(x => x.userId === user.id && x.itemId === id && x.type === 'poster')) { alert('Already voted!'); return; }
+        votes.push({ userId: user.id, itemId: id, type: 'poster', time: Date.now() });
+        set(DB.responses, votes);
+        renderPosters();
+    }
+
+    function renderAttendees() {
+        var u = get(DB.users);
+        var search = document.getElementById('attendee-search')?.value?.toLowerCase() || '';
+        u = u.filter(x => x.name?.toLowerCase().includes(search) || x.email?.toLowerCase().includes(search));
+        document.getElementById('attendees-container').innerHTML = u.map(x => '<div class="col-md-4"><div class="card p-3"><b>' + x.name + '</b><br><small>' + x.email + '</small><br><small>' + (x.org || '') + '</small><br><span class="badge bg-primary">' + (x.type || 'delegate') + '</span></div></div>').join('') || '<p>No attendees</p>';
+    }
+
+    function renderLeads() {
+        var l = get(DB.leads);
+        document.getElementById('leads-container').innerHTML = l.map(x => '<div class="border-bottom p-2"><b>' + x.name + '</b><br><small>' + x.email + ' | ' + (x.org || '') + '</small></div>').join('') || '<p>No leads</p>';
+    }
+
+    function renderPolls() {
+        var p = get(DB.polls);
+        var r = get(DB.responses).filter(x => x.type === 'poll');
+        document.getElementById('polls-container').innerHTML = p.map(x => {
+            var opts = x.options.map(o => {
+                var count = r.filter(y => y.pollId === x.id && y.answer === o).length;
+                return '<div class="mb-1"><small>' + o + ': ' + count + '</small></div>';
+            }).join('');
+            return '<div class="card mb-2 p-3"><b>' + x.question + '</b>' + opts + '<button class="btn btn-sm btn-outline-primary mt-2" onclick="votePoll(' + x.id + ')">Vote</button></div>';
+        }).join('') || '<p>No polls</p>';
+    }
+
+    function votePoll(id) {
+        var poll = get(DB.polls).find(x => x.id === id);
+        if (!poll) return;
+        var ans = prompt('Enter option number (1-' + poll.options.length + '):');
+        var idx = parseInt(ans) - 1;
+        if (isNaN(idx) || !poll.options[idx]) { alert('Invalid'); return; }
+        var r = get(DB.responses);
+        r.push({ userId: user.id, pollId: id, answer: poll.options[idx], type: 'poll', time: Date.now() });
+        set(DB.responses, r);
+        renderPolls();
+    }
+
+    function renderLostFound() {
+        var type = document.querySelector('#view-lostfound .nav-link.active')?.dataset.type || 'lost';
+        var items = get(DB.lostfound).filter(x => x.type === type);
+        document.getElementById('lostfound-container').innerHTML = items.map(x => '<div class="card mb-2 p-2"><b>' + x.desc + '</b><br><small>Contact: ' + (x.contact || '') + '</small></div>').join('') || '<p>No items</p>';
+    }
+
+    function renderProfile() {
+        document.getElementById('qr-display').innerHTML = '';
+        document.getElementById('profile-name').textContent = user.name;
+        document.getElementById('profile-type').textContent = user.type || 'Delegate';
+        new QRCode(document.getElementById('qr-display'), { text: user.email, width: 150, height: 150 });
+    }
+
+    function renderAdmin() {
+        var c = getSettings();
+        document.getElementById('conf-name').value = c.name || '';
+        document.getElementById('conf-start').value = c.start || '';
+        document.getElementById('conf-end').value = c.end || '';
+        document.getElementById('conf-days').value = c.days || 3;
+        document.getElementById('conf-tracks').value = c.tracks || 3;
+        document.getElementById('conf-color').value = c.color || '#1e88e5';
+        
+        document.getElementById('stat-users').textContent = get(DB.users).length;
+        document.getElementById('stat-sessions').textContent = get(DB.sessions).length;
+        document.getElementById('stat-speakers').textContent = get(DB.speakers).length;
+        
+        var wqr = document.getElementById('website-qr');
+        if (wqr && !wqr.querySelector('canvas')) {
+            new QRCode(wqr, { text: location.origin, width: 120, height: 120 });
+        }
+    }
+
+    function setupEvents() {
+        document.getElementById('login-form').onsubmit = function(e) {
+            e.preventDefault();
+            var email = document.getElementById('login-email').value;
+            var pass = document.getElementById('login-password').value;
+            var u = get(DB.users).find(x => x.email === email && x.password === pass);
+            if (email === 'admin@ccsk.or.ke' && pass === 'admin123') { u = { id: 'admin', name: 'Admin', email: email, type: 'admin' }; }
+            if (!u) { u = { id: Date.now(), name: email.split('@')[0], email: email, password: pass, type: 'delegate' }; save(DB.users, u); }
+            user = u;
+            localStorage.setItem('ccsk_current', JSON.stringify(u));
+            showMain();
+        };
+
+        document.getElementById('register-form').onsubmit = function(e) {
+            e.preventDefault();
+            var u = { id: Date.now(), name: document.getElementById('reg-name').value, email: document.getElementById('reg-email').value, org: document.getElementById('reg-org').value, type: document.getElementById('reg-type').value, password: document.getElementById('reg-password').value };
+            if (get(DB.users).some(x => x.email === u.email)) { alert('Email exists!'); return; }
+            save(DB.users, u);
+            user = u;
+            localStorage.setItem('ccsk_current', JSON.stringify(u));
+            showMain();
+        };
+
+        document.getElementById('logout-btn').onclick = function() { user = null; localStorage.removeItem('ccsk_current'); showAuth(); };
+        
+        document.querySelectorAll('.sidebar a').forEach(a => a.onclick = function(e) { e.preventDefault(); location.hash = this.getAttribute('href').slice(1); });
+        window.onhashchange = route;
+
+        document.getElementById('save-conf-btn').onclick = function() {
+            var c = { name: document.getElementById('conf-name').value, start: document.getElementById('conf-start').value, end: document.getElementById('conf-end').value, days: parseInt(document.getElementById('conf-days').value), tracks: parseInt(document.getElementById('conf-tracks').value), color: document.getElementById('conf-color').value };
+            set(DB.settings, c);
+            loadConf();
+            alert('Saved!');
+        };
+
+        document.getElementById('add-sess-btn').onclick = function() {
+            var date = document.getElementById('sess-date').value;
+            var startTime = document.getElementById('sess-start-time').value;
+            var endTime = document.getElementById('sess-end-time').value;
+            var title = document.getElementById('sess-title').value;
+            
+            if (!date || !startTime || !title) { alert('Please fill in Date, Start Time, and Title'); return; }
+            
+            var s = { 
+                id: Date.now(), 
+                date: date, 
+                startTime: startTime, 
+                endTime: endTime || startTime, 
+                title: title, 
+                speaker: document.getElementById('sess-speaker').value, 
+                track: document.getElementById('sess-track').value,
+                type: document.getElementById('sess-type').value, 
+                room: document.getElementById('sess-room').value 
+            };
+            save(DB.sessions, s);
+            alert('Session added!');
+        };
+
+        document.getElementById('add-speaker-btn').onclick = function() {
+            var s = { id: Date.now(), name: document.getElementById('speaker-name').value, title: document.getElementById('speaker-title').value, org: document.getElementById('speaker-org').value };
+            save(DB.speakers, s);
+            alert('Speaker added!');
+        };
+
+        document.getElementById('add-ex-btn').onclick = function() {
+            var e = { id: Date.now(), company: document.getElementById('ex-company').value, desc: document.getElementById('ex-desc').value, tier: document.getElementById('ex-tier').value, booth: document.getElementById('ex-booth').value };
+            save(DB.exhibitors, e);
+            alert('Exhibitor added!');
+        };
+
+        document.getElementById('reg-att-btn').onclick = function() {
+            var pass = Math.random().toString(36).slice(-6);
+            var u = { id: Date.now(), name: document.getElementById('reg-att-name').value, email: document.getElementById('reg-att-email').value, org: document.getElementById('reg-att-org').value, type: document.getElementById('reg-att-type').value, password: pass };
+            save(DB.users, u);
+            document.getElementById('badge-result').innerHTML = '<div class="alert alert-success mt-2"><b>Registered!</b><br>Email: ' + u.email + '<br>Password: ' + pass + '</div>';
+            var qr = document.createElement('div');
+            document.getElementById('badge-result').appendChild(qr);
+            setTimeout(function() { new QRCode(qr, { text: u.email, width: 100, height: 100 }); }, 100);
+        };
+
+        document.getElementById('collect-lead-btn').onclick = function() {
+            var email = document.getElementById('lead-email').value;
+            var u = get(DB.users).find(x => x.email === email);
+            if (!u) { alert('Attendee not found!'); return; }
+            if (get(DB.leads).some(x => x.email === email)) { alert('Lead already collected!'); return; }
+            save(DB.leads, { name: u.name, email: u.email, org: u.org, time: Date.now() });
+            renderLeads();
+            alert('Lead collected!');
+        };
+
+        document.getElementById('create-poll-btn').onclick = function() {
+            var q = document.getElementById('poll-q').value;
+            var opts = Array.from(document.querySelectorAll('.poll-opt')).map(x => x.value).filter(x => x);
+            if (q && opts.length >= 2) {
+                save(DB.polls, { id: Date.now(), question: q, options: opts });
+                bootstrap.Modal.getInstance(document.getElementById('poll-modal')).hide();
+                renderPolls();
+            }
+        };
+
+        document.querySelectorAll('#view-lostfound .nav-link').forEach(l => l.onclick = function() {
+            document.querySelectorAll('#view-lostfound .nav-link').forEach(x => x.classList.remove('active'));
+            l.classList.add('active');
+            renderLostFound();
+        });
+
+        document.getElementById('post-lf-btn').onclick = function() {
+            save(DB.lostfound, { type: document.getElementById('lf-type').value, desc: document.getElementById('lf-desc').value, contact: document.getElementById('lf-contact').value, time: Date.now() });
+            bootstrap.Modal.getInstance(document.getElementById('lf-modal')).hide();
+            renderLostFound();
+        };
+
+        document.getElementById('attendee-search')?.addEventListener('input', renderAttendees);
+    }
+
+    window.toggleFav = toggleFav;
+    window.votePoster = votePoster;
+    window.votePoll = votePoll;
+
+    function seedData() {
+        if (get(DB.sessions).length === 0 && typeof CCSK_SESSIONS !== 'undefined') {
+            set(DB.sessions, CCSK_SESSIONS);
+        }
+        if (get(DB.speakers).length === 0 && typeof CCSK_SPEAKERS !== 'undefined') {
+            set(DB.speakers, CCSK_SPEAKERS);
+        }
+        var c = getSettings();
+        if (!c.name) {
+            set(DB.settings, {
+                name: '13th CCSK Annual Scientific Conference',
+                start: '2026-05-13',
+                end: '2026-05-15',
+                days: 3,
+                tracks: 3,
+                color: '#003087'
+            });
+        }
+    }
+
+    seedData();
+    init();
+    </script>
+</body>
+</html>
