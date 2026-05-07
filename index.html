@@ -124,6 +124,11 @@
     .station-card .st-room { font-size:.7rem; color:var(--day-color); font-weight:600; margin-bottom:3px; }
     .station-card .st-desc { font-size:.75rem; color:#555; }
     .rotation-label { font-size:.7rem; color:#888; font-style:italic; margin:6px 0 2px; }
+    /* ── Workshop scroll row ── */
+    .ws-scroll-row { display:flex; overflow-x:auto; gap:10px; padding-bottom:10px;
+      -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-bottom:8px; }
+    .ws-scroll-row::-webkit-scrollbar { display:none; }
+    .ws-col { flex:0 0 88vw; max-width:440px; --day-color:var(--wk-color, var(--blue)); }
     .lec-group-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
       color:#fff; background:var(--day-color); display:inline-block; padding:2px 8px; border-radius:20px;
       margin:8px 0 4px; opacity:.85; }
@@ -167,9 +172,32 @@
     <div class="time-label">08:00 – 08:30</div>
     <div class="session-card break"><div class="s-title">Registration</div><div class="s-room">Main Lobby</div></div>
 
-    <div class="time-label">08:30 – 10:00 &nbsp;|&nbsp; Parallel Workshops</div>
-    <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 1</span><div class="s-title">Airway Management (AM) Workshop</div><div class="s-speaker">Dr Kevin Umani &amp; Dr Charles Kabetu</div></div>
+    <div class="time-label">08:30 – 17:00 &nbsp;|&nbsp; Pre-Congress Workshops &nbsp;·&nbsp; <small style="font-weight:400;text-transform:none;font-size:.9em;opacity:.8">← swipe to browse →</small></div>
+    <div class="ws-scroll-row">
 
+      <!-- AM Workshop column -->
+      <div class="ws-col" style="--wk-color:#c62828;">
+        <div class="workshop-detail">
+          <div class="wk-header">
+            <div class="wk-title">Airway Management Workshop</div>
+            <div class="wk-sub">Victoria Hall 1 &nbsp;|&nbsp; 08:30 – 15:30</div>
+            <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Kevin Umani &nbsp;·&nbsp; Dr Charles Kabetu</div>
+          </div>
+          <div class="wk-body">
+            <div class="wk-section-label">08:30 – 10:00 &nbsp;·&nbsp; Morning Session</div>
+            <div class="rotation-label">Airway assessment · basic manoeuvres · equipment familiarisation</div>
+            <div class="wk-section-label">10:00 – 10:20 &nbsp;·&nbsp; ☕ Tea Break</div>
+            <div class="wk-section-label">10:20 – 13:00 &nbsp;·&nbsp; Simulation — Difficult Airway</div>
+            <div class="rotation-label">Video laryngoscopy · supraglottic airways · difficult airway scenarios</div>
+            <div class="wk-section-label">13:00 – 14:00 &nbsp;·&nbsp; 🍽 Lunch Break</div>
+            <div class="wk-section-label">14:00 – 15:30 &nbsp;·&nbsp; Afternoon Session</div>
+            <div class="rotation-label">Awake fibreoptic intubation · surgical airway · case discussions</div>
+          </div>
+        </div>
+      </div><!-- /ws-col AM -->
+
+      <!-- AMV Workshop column -->
+      <div class="ws-col" style="--wk-color:#4527a0;">
     <!-- AMV Workshop — detailed curriculum -->
     <div class="workshop-detail">
       <div class="wk-header">
@@ -332,8 +360,10 @@
 
       </div>
     </div>
+      </div><!-- /ws-col AMV -->
 
-    <!-- POCUS Workshop — detailed program -->
+      <!-- POCUS Workshop column -->
+      <div class="ws-col" style="--wk-color:#006064;">
     <div class="workshop-detail">
       <div class="wk-header">
         <div class="wk-title">Point of Care Ultrasound (POCUS) Workshop</div>
@@ -438,18 +468,8 @@
 
       </div>
     </div>
-
-    <div class="time-label">10:00 – 10:30</div>
-    <div class="session-card break"><div class="s-title">☕ Tea Break</div></div>
-
-    <div class="time-label">10:30 – 13:00 &nbsp;|&nbsp; Workshops Continued</div>
-    <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 1</span><div class="s-title">Airway Management Workshop (continued)</div><div class="s-speaker">Dr Kevin Umani &amp; Dr Charles Kabetu</div></div>
-
-    <div class="time-label">13:00 – 14:00</div>
-    <div class="session-card break"><div class="s-title">🍽 Lunch</div></div>
-
-    <div class="time-label">14:00 – 15:30 &nbsp;|&nbsp; Workshops Afternoon</div>
-    <div class="session-card workshop"><span class="session-group">Workshop · Victoria Hall 1</span><div class="s-title">Airway Management Workshop (afternoon)</div><div class="s-speaker">Dr Kevin Umani &amp; Dr Charles Kabetu</div></div>
+      </div><!-- /ws-col POCUS -->
+    </div><!-- /ws-scroll-row -->
 
     <div class="time-label">15:30 – 16:00</div>
     <div class="session-card break"><div class="s-title">☕ Tea Break</div></div>
