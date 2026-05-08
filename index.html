@@ -170,6 +170,71 @@
     footer { background: var(--blue); color: rgba(255,255,255,.75);
       text-align: center; font-size: .75rem; padding: 16px; margin-top: 32px; }
     footer a { color: rgba(255,255,255,.85); }
+
+    /* ── Lost & Found ── */
+    .lf-header { text-align:center; padding: 24px 0 8px; }
+    .lf-heading { font-size: 1.4rem; font-weight: 800; color: var(--blue); }
+    .lf-heading i { color: var(--red); }
+    .lf-sub { color: #555; font-size: .85rem; margin-top: 4px; }
+
+    .lf-form-card { background:#fff; border-radius:12px; padding:20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.1); margin-bottom:20px; }
+    .lf-form-title { font-weight:700; color:var(--blue); font-size:.95rem; margin-bottom:12px; }
+
+    .lf-type-toggle { display:flex; gap:10px; margin-bottom:14px; }
+    .lf-type-btn { flex:1; padding:10px 6px; border:2px solid #ddd; border-radius:8px;
+      background:#fff; font-size:.8rem; font-weight:700; cursor:pointer;
+      transition: all .2s; color:#666; }
+    .lf-type-btn.active.lf-lost  { background:#fdecea; border-color:#c62828; color:#c62828; }
+    .lf-type-btn.active.lf-found { background:#e8f5e9; border-color:#2e7d32; color:#2e7d32; }
+
+    .lf-fields { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+    .lf-input { border:1.5px solid #ddd; border-radius:8px; padding:9px 12px;
+      font-size:.85rem; outline:none; transition:border-color .2s; }
+    .lf-input:focus { border-color: var(--blue); }
+
+    .lf-submit-btn { width:100%; background:var(--blue); color:#fff; border:none;
+      border-radius:8px; padding:11px; font-weight:700; font-size:.9rem;
+      cursor:pointer; transition:background .2s; }
+    .lf-submit-btn:hover { background:#004aad; }
+    .lf-msg { margin-top:10px; padding:9px 12px; border-radius:8px;
+      font-size:.82rem; font-weight:600; text-align:center; }
+    .lf-msg.ok  { background:#e8f5e9; color:#2e7d32; }
+    .lf-msg.err { background:#fdecea; color:#c62828; }
+
+    .lf-filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .lf-filter { padding:5px 14px; border-radius:20px; border:1.5px solid #ccc;
+      background:#fff; font-size:.78rem; font-weight:700; cursor:pointer;
+      color:#555; transition:all .2s; }
+    .lf-filter.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+
+    .lf-list { display:flex; flex-direction:column; gap:12px; }
+    .lf-empty { text-align:center; color:#aaa; font-size:.85rem; padding:40px 0;
+      line-height:2; }
+
+    .lf-card { background:#fff; border-radius:12px; padding:16px;
+      box-shadow:0 2px 8px rgba(0,0,0,.08); border-left:4px solid #ccc; }
+    .lf-card.lost  { border-left-color:#c62828; }
+    .lf-card.found { border-left-color:#2e7d32; }
+    .lf-card.resolved { opacity:.55; }
+
+    .lf-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+    .lf-badge { font-size:.65rem; font-weight:900; letter-spacing:1px;
+      padding:3px 8px; border-radius:20px; white-space:nowrap; }
+    .lf-badge.lost  { background:#fdecea; color:#c62828; }
+    .lf-badge.found { background:#e8f5e9; color:#2e7d32; }
+    .lf-badge.resolved { background:#e0e0e0; color:#666; }
+
+    .lf-item-name { font-weight:700; color:var(--blue); font-size:.95rem; margin-bottom:3px; }
+    .lf-item-desc { color:#555; font-size:.82rem; margin-bottom:6px; }
+    .lf-item-meta { font-size:.75rem; color:#888; display:flex; flex-wrap:wrap; gap:8px; }
+    .lf-item-meta span i { margin-right:3px; }
+    .lf-claim-btn { margin-top:10px; padding:6px 14px; border-radius:8px; border:none;
+      font-size:.78rem; font-weight:700; cursor:pointer; transition:all .2s; }
+    .lf-card.lost  .lf-claim-btn { background:#e8f5e9; color:#2e7d32; }
+    .lf-card.found .lf-claim-btn { background:#fdecea; color:#c62828; }
+    .lf-claim-btn:hover { filter:brightness(.9); }
+    .lf-claim-btn:disabled { opacity:.45; cursor:default; }
   </style>
 </head>
 <body>
@@ -189,6 +254,7 @@
     <li class="nav-item"><button class="nav-link" onclick="showDay('day1')">Thu 14 May &nbsp;<small>Day 1</small></button></li>
     <li class="nav-item"><button class="nav-link" onclick="showDay('day2')">Fri 15 May &nbsp;<small>Day 2</small></button></li>
     <li class="nav-item"><button class="nav-link" onclick="showDay('speakers')"><i class="fas fa-user-tie me-1"></i><small>Speakers</small></button></li>
+    <li class="nav-item"><button class="nav-link" onclick="showDay('lostfound')"><i class="fas fa-search me-1"></i><small>Lost & Found</small></button></li>
   </ul>
 </header>
 
@@ -712,6 +778,49 @@
     <div class="row g-3 mt-1" id="speaker-grid"></div>
   </div>
 
+  <!-- Lost & Found -->
+  <div id="day-lostfound" class="d-none">
+    <div class="lf-header">
+      <h2 class="lf-heading"><i class="fas fa-search-location"></i> Lost &amp; Found</h2>
+      <p class="lf-sub">Post a lost or found item — fellow delegates will see it instantly.</p>
+    </div>
+
+    <!-- Post form -->
+    <div class="lf-form-card" id="lf-form-wrap">
+      <div class="lf-form-title">Report an Item</div>
+      <div class="lf-type-toggle">
+        <button class="lf-type-btn lf-lost active" id="btn-lost" onclick="lfSetType('lost')">
+          <i class="fas fa-question-circle"></i> I Lost Something
+        </button>
+        <button class="lf-type-btn lf-found" id="btn-found" onclick="lfSetType('found')">
+          <i class="fas fa-hand-holding"></i> I Found Something
+        </button>
+      </div>
+      <div class="lf-fields">
+        <input id="lf-item"    class="lf-input" type="text"  placeholder="Item name (e.g. Black laptop bag)" maxlength="80">
+        <input id="lf-desc"    class="lf-input" type="text"  placeholder="Description / colour / markings" maxlength="120">
+        <input id="lf-loc"     class="lf-input" type="text"  placeholder="Where lost / found (e.g. Victoria Hall 1, Foyer)" maxlength="80">
+        <input id="lf-name"    class="lf-input" type="text"  placeholder="Your name" maxlength="60">
+        <input id="lf-contact" class="lf-input" type="text"  placeholder="Contact (phone or email)" maxlength="80">
+      </div>
+      <button class="lf-submit-btn" onclick="lfSubmit()"><i class="fas fa-paper-plane"></i> Submit</button>
+      <div id="lf-msg" class="lf-msg d-none"></div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="lf-filter-row">
+      <button class="lf-filter active" id="lf-filter-all"   onclick="lfFilter('all')">All</button>
+      <button class="lf-filter"        id="lf-filter-lost"  onclick="lfFilter('lost')">Lost</button>
+      <button class="lf-filter"        id="lf-filter-found" onclick="lfFilter('found')">Found</button>
+      <button class="lf-filter"        id="lf-filter-open"  onclick="lfFilter('open')">Open only</button>
+    </div>
+
+    <!-- Items list -->
+    <div id="lf-list" class="lf-list">
+      <div class="lf-empty" id="lf-empty"><i class="fas fa-box-open"></i><br>No items yet — be the first to post!</div>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -786,14 +895,15 @@
   };
 
   function showDay(id) {
-    ['pre','day1','day2','speakers'].forEach(d => {
+    ['pre','day1','day2','speakers','lostfound'].forEach(d => {
       document.getElementById('day-' + d).classList.add('d-none');
     });
     document.getElementById('day-' + id).classList.remove('d-none');
     document.querySelectorAll('.day-tabs .nav-link').forEach(b => b.classList.remove('active'));
     event.currentTarget.classList.add('active');
-    document.documentElement.style.setProperty('--day-color', DAY_COLORS[id]);
+    document.documentElement.style.setProperty('--day-color', DAY_COLORS[id] || '#003087');
     if (id === 'speakers') renderSpeakers();
+    if (id === 'lostfound' && window.renderLFItems) window.renderLFItems();
     window.scrollTo(0, 0);
   }
 
@@ -1032,6 +1142,169 @@
   updateNowBar();
   setInterval(checkAlerts,  30000);   // fire alerts every 30 s
   setInterval(updateNowBar, 1000);    // update countdown every second
+</script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, serverTimestamp, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── Firebase config — replace with your project's config ────────────────────
+  const firebaseConfig = {
+    apiKey:            "AIzaSyBCCSK2026LostFoundDemoKey",
+    authDomain:        "ccsk2026.firebaseapp.com",
+    projectId:         "ccsk2026",
+    storageBucket:     "ccsk2026.appspot.com",
+    messagingSenderId: "123456789",
+    appId:             "1:123456789:web:abcdef123456"
+  };
+  // ────────────────────────────────────────────────────────────────────────────
+
+  let db, lfItems = [], lfCurrentType = 'lost', lfCurrentFilter = 'all';
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    startLFListener();
+  } catch(e) {
+    console.warn('Firebase not configured — running in demo mode', e);
+    useDemoMode();
+  }
+
+  function startLFListener() {
+    const q = query(collection(db, 'lostfound'), orderBy('ts', 'desc'));
+    onSnapshot(q, snap => {
+      lfItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderLFItems();
+    }, err => {
+      console.warn('Firestore error, switching to demo mode:', err);
+      useDemoMode();
+    });
+  }
+
+  function useDemoMode() {
+    lfItems = JSON.parse(localStorage.getItem('ccsk_lf') || '[]');
+    renderLFItems();
+    window._lfDemoMode = true;
+  }
+
+  window.lfSetType = function(type) {
+    lfCurrentType = type;
+    document.getElementById('btn-lost').classList.toggle('active', type === 'lost');
+    document.getElementById('btn-found').classList.toggle('active', type === 'found');
+  };
+
+  window.lfFilter = function(f) {
+    lfCurrentFilter = f;
+    document.querySelectorAll('.lf-filter').forEach(b => b.classList.remove('active'));
+    document.getElementById('lf-filter-' + f).classList.add('active');
+    renderLFItems();
+  };
+
+  window.lfSubmit = async function() {
+    const item    = document.getElementById('lf-item').value.trim();
+    const desc    = document.getElementById('lf-desc').value.trim();
+    const loc     = document.getElementById('lf-loc').value.trim();
+    const name    = document.getElementById('lf-name').value.trim();
+    const contact = document.getElementById('lf-contact').value.trim();
+    const msg     = document.getElementById('lf-msg');
+
+    if (!item || !name || !contact) {
+      showMsg('Please fill in item name, your name, and contact.', 'err'); return;
+    }
+
+    const record = { type: lfCurrentType, item, desc, loc, name, contact,
+                     resolved: false, ts: Date.now() };
+
+    try {
+      if (window._lfDemoMode) {
+        record.id = 'demo_' + Date.now();
+        lfItems.unshift(record);
+        localStorage.setItem('ccsk_lf', JSON.stringify(lfItems));
+        renderLFItems();
+      } else {
+        await addDoc(collection(db, 'lostfound'), { ...record, ts: serverTimestamp() });
+      }
+      ['lf-item','lf-desc','lf-loc','lf-name','lf-contact'].forEach(id =>
+        document.getElementById(id).value = '');
+      showMsg('Posted! Others can see it now.', 'ok');
+    } catch(e) {
+      showMsg('Could not post — please try again.', 'err');
+    }
+  };
+
+  window.lfClaim = async function(id, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Marked as resolved ✓';
+    try {
+      if (window._lfDemoMode) {
+        lfItems = lfItems.map(i => i.id === id ? {...i, resolved:true} : i);
+        localStorage.setItem('ccsk_lf', JSON.stringify(lfItems));
+        renderLFItems();
+      } else {
+        await updateDoc(doc(db, 'lostfound', id), { resolved: true });
+      }
+    } catch(e) { btn.disabled = false; btn.textContent = 'Error — try again'; }
+  };
+
+  function showMsg(text, type) {
+    const el = document.getElementById('lf-msg');
+    el.textContent = text;
+    el.className = 'lf-msg ' + type;
+    el.classList.remove('d-none');
+    setTimeout(() => el.classList.add('d-none'), 4000);
+  }
+
+  window.renderLFItems = function() {
+    const list = document.getElementById('lf-list');
+    const empty = document.getElementById('lf-empty');
+    let visible = lfItems.filter(i => {
+      if (lfCurrentFilter === 'lost')  return i.type === 'lost';
+      if (lfCurrentFilter === 'found') return i.type === 'found';
+      if (lfCurrentFilter === 'open')  return !i.resolved;
+      return true;
+    });
+
+    [...list.querySelectorAll('.lf-card')].forEach(el => el.remove());
+
+    if (!visible.length) { empty.classList.remove('d-none'); return; }
+    empty.classList.add('d-none');
+
+    visible.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `lf-card ${item.type} ${item.resolved ? 'resolved' : ''}`;
+      const badgeLabel = item.resolved ? 'RESOLVED' : item.type.toUpperCase();
+      const badgeClass = item.resolved ? 'resolved' : item.type;
+      const claimLabel = item.type === 'lost' ? 'I Found This!' : 'This Is Mine!';
+      const tsStr = item.ts?.toDate
+        ? item.ts.toDate().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'})
+        : item.ts
+          ? new Date(item.ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})
+          : '';
+      card.innerHTML = `
+        <div class="lf-card-top">
+          <div>
+            <div class="lf-item-name">${esc(item.item)}</div>
+            <div class="lf-item-desc">${esc(item.desc || '')}</div>
+          </div>
+          <span class="lf-badge ${badgeClass}">${badgeLabel}</span>
+        </div>
+        <div class="lf-item-meta">
+          ${item.loc ? `<span><i class="fas fa-map-marker-alt"></i>${esc(item.loc)}</span>` : ''}
+          <span><i class="fas fa-user"></i>${esc(item.name)}</span>
+          <span><i class="fas fa-phone-alt"></i>${esc(item.contact)}</span>
+          ${tsStr ? `<span><i class="fas fa-clock"></i>${tsStr}</span>` : ''}
+        </div>
+        ${!item.resolved ? `<button class="lf-claim-btn" onclick="lfClaim('${item.id}', this)">${claimLabel}</button>` : ''}
+      `;
+      list.appendChild(card);
+    });
+  };
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 </script>
 </body>
 </html>
