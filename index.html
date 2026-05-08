@@ -211,19 +211,50 @@
       <div class="ws-col" style="--wk-color:#c62828;">
         <div class="workshop-detail">
           <div class="wk-header">
-            <div class="wk-title">Airway Management Workshop</div>
-            <div class="wk-sub">Victoria Hall 1 &nbsp;|&nbsp; 08:30 – 15:30</div>
-            <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Kevin Umani &nbsp;·&nbsp; Dr Charles Kabetu</div>
+            <div class="wk-title">Airway Management in the ICU — Navigating the Physiological Frontier</div>
+            <div class="wk-sub">Victoria Hall 1 &nbsp;|&nbsp; 09:00 – 13:20 &nbsp;|&nbsp; Based on DAS 2025 Guidelines</div>
+            <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Kevin Umani &nbsp;·&nbsp; Dr Charles Kabetu &nbsp;·&nbsp; Dr Mohamed Billow &nbsp;·&nbsp; Dr Sheila Gitau</div>
           </div>
           <div class="wk-body">
-            <div class="wk-section-label">08:30 – 10:00 &nbsp;·&nbsp; Morning Session</div>
-            <div class="rotation-label">Airway assessment · basic manoeuvres · equipment familiarisation</div>
-            <div class="wk-section-label">10:00 – 10:20 &nbsp;·&nbsp; ☕ Tea Break</div>
-            <div class="wk-section-label">10:20 – 13:00 &nbsp;·&nbsp; Simulation — Difficult Airway</div>
-            <div class="rotation-label">Video laryngoscopy · supraglottic airways · difficult airway scenarios</div>
-            <div class="wk-section-label">13:00 – 14:00 &nbsp;·&nbsp; 🍽 Lunch Break</div>
-            <div class="wk-section-label">14:00 – 15:30 &nbsp;·&nbsp; Afternoon Session</div>
-            <div class="rotation-label">Awake fibreoptic intubation · surgical airway · case discussions</div>
+
+            <div class="station-card">
+              <div class="st-time">09:00 – 09:30</div>
+              <div class="st-name">The New Standard: DAS 2025 Update</div>
+              <div class="st-obj">Didactic lecture · updated intubation algorithm · physiological optimisation principles · role of human factors in ICU airway emergencies</div>
+            </div>
+
+            <div class="station-card">
+              <div class="st-time">09:30 – 10:20</div>
+              <div class="st-name">Skill Station 1 — Plan A: The Perfect Attempt</div>
+              <div class="st-obj">Video laryngoscopy technique · bougie-assisted intubation · stylet use · optimising first-pass success · direct vs indirect laryngoscopy drills</div>
+            </div>
+
+            <div class="station-card">
+              <div class="st-time">10:20 – 11:10</div>
+              <div class="st-name">Skill Station 2 — Physiological Optimisation</div>
+              <div class="st-obj">Pre-oxygenation with HFNO · NIV apnoeic oxygenation · RAMP positioning · haemodynamic preparation · RSI drug selection for the sick patient</div>
+            </div>
+
+            <div class="wk-section-label">11:10 – 11:30 &nbsp;·&nbsp; Networking &amp; Industry Showcase</div>
+
+            <div class="station-card">
+              <div class="st-time">11:30 – 12:20</div>
+              <div class="st-name">Skill Station 3 — Plan B &amp; C: Rescue Ventilation</div>
+              <div class="st-obj">Supraglottic airway devices · 2-person facemask ventilation · CICO recognition · decision-making in the cannot-intubate-cannot-oxygenate scenario</div>
+            </div>
+
+            <div class="station-card">
+              <div class="st-time">12:20 – 12:50</div>
+              <div class="st-name">Skill Station 4 — Plan D: Scalpel-Bougie-Tube</div>
+              <div class="st-obj">Ultrasound-guided cricothyroid identification · scalpel-bougie-tube emergency front-of-neck access · hands-on trainer simulation</div>
+            </div>
+
+            <div class="station-card">
+              <div class="st-time">12:50 – 13:20</div>
+              <div class="st-name">Synthesis: CRM &amp; Post-Intubation Care</div>
+              <div class="st-obj">Crisis Resource Management debrief · post-intubation checklist · sedation and lung-protective ventilation initiation · airway documentation standards</div>
+            </div>
+
           </div>
         </div>
       </div><!-- /ws-col AM -->
@@ -831,7 +862,14 @@
 
   // ── Session time-tracker ───────────────────────────────────────────────────
   const SCHED = [
-    // Pre-conference · Wed 13 May
+    // Pre-conference · Wed 13 May — AM Workshop (Airway Management)
+    {d:'2026-05-13',s:'09:00',e:'09:30',t:'The New Standard: DAS 2025 Update',sp:'Dr Kevin Umani & Dr Charles Kabetu',hall:'AM Workshop · Victoria Hall 1'},
+    {d:'2026-05-13',s:'09:30',e:'10:20',t:'Skill Station 1 — Plan A: The Perfect Attempt',sp:'AM Faculty',hall:'AM Workshop · Victoria Hall 1'},
+    {d:'2026-05-13',s:'10:20',e:'11:10',t:'Skill Station 2 — Physiological Optimisation',sp:'AM Faculty',hall:'AM Workshop · Victoria Hall 1'},
+    {d:'2026-05-13',s:'11:30',e:'12:20',t:'Skill Station 3 — Plan B & C: Rescue Ventilation',sp:'AM Faculty',hall:'AM Workshop · Victoria Hall 1'},
+    {d:'2026-05-13',s:'12:20',e:'12:50',t:'Skill Station 4 — Plan D: Scalpel-Bougie-Tube',sp:'AM Faculty',hall:'AM Workshop · Victoria Hall 1'},
+    {d:'2026-05-13',s:'12:50',e:'13:20',t:'Synthesis: CRM & Post-Intubation Care',sp:'AM Faculty',hall:'AM Workshop · Victoria Hall 1'},
+    // Pre-conference · Wed 13 May — AMV Workshop
     {d:'2026-05-13',s:'09:03',e:'09:07',t:'A1: The 6 ml/kg Rule — Then and Now',sp:'ICUDemy',hall:'AMV · Plenary'},
     {d:'2026-05-13',s:'09:12',e:'09:16',t:'A2: Mechanical Power — The Missing Variable',sp:'ICUDemy',hall:'AMV · Plenary'},
     {d:'2026-05-13',s:'09:21',e:'09:25',t:'A3: The Baby Lung — Regional Strain & CT',sp:'ICUDemy',hall:'AMV · Plenary'},
