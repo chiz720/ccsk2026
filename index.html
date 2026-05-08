@@ -132,9 +132,12 @@
     /* ── Swipe hint ── */
     .swipe-hint { display:flex; align-items:center; gap:6px; font-size:.75rem;
       font-weight:700; color:var(--day-color); padding:4px 2px 6px; }
-    .swipe-hint .hand { font-size:1.1rem; display:inline-block;
-      animation:nudge 1.4s ease-in-out infinite; }
-    @keyframes nudge { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
+    .swipe-hint .hand-l { font-size:1.1rem; display:inline-block;
+      animation:nudge-l 1.4s ease-in-out infinite; }
+    .swipe-hint .hand-r { font-size:1.1rem; display:inline-block;
+      animation:nudge-r 1.4s ease-in-out infinite; }
+    @keyframes nudge-l { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-6px)} }
+    @keyframes nudge-r { 0%,100%{transform:translateX(0)} 50%{transform:translateX( 6px)} }
     .lec-group-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
       color:#fff; background:var(--day-color); display:inline-block; padding:2px 8px; border-radius:20px;
       margin:8px 0 4px; opacity:.85; }
@@ -766,8 +769,8 @@
     const hint = document.createElement('div');
     hint.className = 'swipe-hint';
     hint.innerHTML = isParallel
-      ? '<span class="hand">👉</span> Swipe to see the other track'
-      : '<span class="hand">👉</span> Swipe to browse all workshops';
+      ? '<span class="hand-l">👈</span> Swipe between tracks <span class="hand-r">👉</span>'
+      : '<span class="hand-l">👈</span> Swipe to browse workshops <span class="hand-r">👉</span>';
     row.parentNode.insertBefore(hint, row);
 
     // For parallel sessions: add ws-col class + per-track colour
