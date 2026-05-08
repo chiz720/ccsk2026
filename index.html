@@ -138,6 +138,29 @@
       animation:nudge-r 1.4s ease-in-out infinite; }
     @keyframes nudge-l { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-6px)} }
     @keyframes nudge-r { 0%,100%{transform:translateX(0)} 50%{transform:translateX( 6px)} }
+    /* ── Now-Live bar ── */
+    .ccsk-now { position:fixed; bottom:0; left:0; right:0; background:#111827;
+      color:#fff; padding:10px 16px; display:flex; align-items:center; gap:12px;
+      z-index:1050; box-shadow:0 -3px 18px rgba(0,0,0,.45); }
+    .cn-live { font-size:.6rem; font-weight:900; letter-spacing:1.5px; color:#ff4d4d;
+      animation:blink-dot 1.2s ease-in-out infinite; white-space:nowrap; }
+    @keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .cn-body { flex:1; min-width:0; }
+    .cn-title { font-size:.82rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cn-meta  { font-size:.68rem; opacity:.7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cn-timer { font-size:1.45rem; font-weight:800; letter-spacing:1px;
+      font-variant-numeric:tabular-nums; flex-shrink:0; }
+    .cn-timer.urgent { color:#ff6b6b; }
+    /* ── Toast alerts ── */
+    .ccsk-toast { position:fixed; left:50%; bottom:72px;
+      transform:translateX(-50%) translateY(18px); opacity:0;
+      transition:opacity .35s ease, transform .35s ease;
+      padding:13px 20px; border-radius:14px; font-size:.83rem; text-align:center;
+      min-width:270px; max-width:90vw; box-shadow:0 6px 24px rgba(0,0,0,.35);
+      z-index:1100; line-height:1.5; pointer-events:none; }
+    .ccsk-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    .ccsk-toast-warn { background:#e65100; color:#fff; }
+    .ccsk-toast-up   { background:#b71c1c; color:#fff; }
     .lec-group-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
       color:#fff; background:var(--day-color); display:inline-block; padding:2px 8px; border-radius:20px;
       margin:8px 0 4px; opacity:.85; }
@@ -664,6 +687,16 @@
   <div class="mt-1">Critical Care Society of Kenya &mdash; 13th Annual Scientific Conference 2026</div>
 </footer>
 
+<!-- Now-Live session bar -->
+<div id="ccsk-now" class="ccsk-now d-none">
+  <div class="cn-live">● LIVE</div>
+  <div class="cn-body">
+    <div class="cn-title" id="cn-title"></div>
+    <div class="cn-meta"  id="cn-meta"></div>
+  </div>
+  <div class="cn-timer" id="cn-timer">--:--</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   const SPEAKERS = [
@@ -795,6 +828,171 @@
   const today = new Date().toISOString().split('T')[0];
   if (today === '2026-05-14') document.querySelectorAll('.day-tabs .nav-link')[1].click();
   else if (today === '2026-05-15') document.querySelectorAll('.day-tabs .nav-link')[2].click();
+
+  // ── Session time-tracker ───────────────────────────────────────────────────
+  const SCHED = [
+    // Pre-conference · Wed 13 May
+    {d:'2026-05-13',s:'09:03',e:'09:07',t:'A1: The 6 ml/kg Rule — Then and Now',sp:'ICUDemy',hall:'AMV · Plenary'},
+    {d:'2026-05-13',s:'09:12',e:'09:16',t:'A2: Mechanical Power — The Missing Variable',sp:'ICUDemy',hall:'AMV · Plenary'},
+    {d:'2026-05-13',s:'09:21',e:'09:25',t:'A3: The Baby Lung — Regional Strain & CT',sp:'ICUDemy',hall:'AMV · Plenary'},
+    {d:'2026-05-13',s:'10:00',e:'10:45',t:'AMV Station Rotation 1',sp:'All Faculty',hall:'AMV Workshop'},
+    {d:'2026-05-13',s:'10:45',e:'11:30',t:'AMV Station Rotation 2',sp:'All Faculty',hall:'AMV Workshop'},
+    {d:'2026-05-13',s:'11:30',e:'12:15',t:'AMV Station Rotation 3',sp:'All Faculty',hall:'AMV Workshop'},
+    {d:'2026-05-13',s:'12:15',e:'13:00',t:'AMV Station Rotation 4',sp:'All Faculty',hall:'AMV Workshop'},
+    {d:'2026-05-13',s:'13:00',e:'13:04',t:'∑ Precision Mechanical Ventilation',sp:'ICUDemy',hall:'AMV · Plenary'},
+    // Day 1 · Thu 14 May — Victoria Hall 1
+    {d:'2026-05-14',s:'08:30',e:'08:55',t:'"Poor Man\'s" Cardiac Output Monitor',sp:'Dr Salim Hassanali',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'08:55',e:'09:20',t:'Central Venous Oxygen Saturation',sp:'Dr Mark Gacii',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'09:20',e:'09:45',t:'The Diastolic Shock Index (DSI)',sp:'Dr Susan Mutahi',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'09:45',e:'10:10',t:'Post Cardiac Surgery Care',sp:'Dr Kevin Umani',hall:'Victoria Hall 1'},
+    // Day 1 · Thu 14 May — Victoria Hall 3
+    {d:'2026-05-14',s:'08:30',e:'08:55',t:'Intraoperative BP Patterns — ML & VitalDB',sp:'Dr Daniel Owambo',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'08:55',e:'09:20',t:'Large Language Models in the ICU',sp:'Dr Wangui Manguyu',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'09:20',e:'09:45',t:'Automating Antimicrobial Stewardship with R',sp:'Dr Fredrick Mutisya',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'09:45',e:'10:10',t:'Digital Baby Lung: 3D Volumetry in ARDS',sp:'Dr Idris Chikophe',hall:'Victoria Hall 3'},
+    // Day 1 · Plenary
+    {d:'2026-05-14',s:'10:50',e:'11:10',t:'Opening Ceremony',sp:'',hall:'Plenary · Victoria Hall 1'},
+    {d:'2026-05-14',s:'11:10',e:'11:55',t:'Workforce in Critical Care',sp:'Dr Andrew Toro',hall:'Plenary · Victoria Hall 1'},
+    // Day 1 · Mid-morning — Victoria Hall 1
+    {d:'2026-05-14',s:'11:55',e:'12:20',t:'Echo-Hemodynamic Interface: VTI & PLR',sp:'Dr Romeo Wahome',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'12:20',e:'12:45',t:'Venous Congestion: The Silent Killer (VExUS)',sp:'Dr Daniel Gakuo',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'12:45',e:'13:10',t:'Tidal Volume Challenge & Fluid Responsiveness',sp:'Dr David Odaba',hall:'Victoria Hall 1'},
+    // Day 1 · Mid-morning — Victoria Hall 3
+    {d:'2026-05-14',s:'11:55',e:'12:20',t:'Evaluation of Critical Care Fellowship',sp:'Dr Demet Sulemanji',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'12:20',e:'12:45',t:'Evaluation of Pediatric Emergency & Critical Program',sp:'Dr Rheel Bhupi',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'12:45',e:'13:10',t:'From Haptics to Holograms: Simulation in CC',sp:'Joash Kiptanui',hall:'Victoria Hall 3'},
+    // Day 1 · Afternoon — Victoria Hall 1
+    {d:'2026-05-14',s:'14:20',e:'14:45',t:'Massive Blood Transfusion & Coagulopathy',sp:'Dr Anne-Marie Githaiga',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'14:45',e:'15:10',t:'Transfusion Triggers in Critical Care',sp:'Prof Marcus Lance',hall:'Victoria Hall 1'},
+    {d:'2026-05-14',s:'15:10',e:'15:35',t:'Can We Predict the Need for Blood?',sp:'Dr Kenan Nyalile',hall:'Victoria Hall 1'},
+    // Day 1 · Afternoon — Victoria Hall 3
+    {d:'2026-05-14',s:'14:20',e:'14:45',t:'Rural vs. Urban Critical Care',sp:'Dr Violet Kemunto',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'14:45',e:'15:10',t:'Critical Care After the Medical Equipment Scheme',sp:'Dr Wambui Mwangi',hall:'Victoria Hall 3'},
+    {d:'2026-05-14',s:'15:10',e:'15:35',t:'Critical Care Without Walls',sp:'Prof Jana Macleod',hall:'Victoria Hall 3'},
+    // Day 2 · Fri 15 May — Victoria Hall 1
+    {d:'2026-05-15',s:'08:30',e:'08:55',t:'SLED vs. CRRT: Hybrid Therapies',sp:'Dr Hussein Bagha',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'08:55',e:'09:20',t:'Hyponatremia in the ICU',sp:'Prof Ahmed Sokwala',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'09:20',e:'09:45',t:'Peritoneal Dialysis in Pediatric Resource-Poor Settings',sp:'Dr Daisy Odundo',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'09:45',e:'10:10',t:'To Dialyze or Not: Clinical Vignettes',sp:'Dr George Moturi',hall:'Victoria Hall 1'},
+    // Day 2 · Fri 15 May — Victoria Hall 3
+    {d:'2026-05-15',s:'08:30',e:'08:55',t:'Lung Protective Ventilation: Beyond Plateau Pressure',sp:'Dr Demet Sulemanji',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'08:55',e:'09:20',t:'Predicting Weaning Success',sp:'Dr Leah Opere',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'09:20',e:'09:45',t:'Percutaneous Tracheostomy',sp:'Dr Reuben Okioma',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'09:45',e:'10:10',t:'Early vs. Late Tracheostomy in ICU',sp:'Dr Mark Ndara',hall:'Victoria Hall 3'},
+    // Day 2 · Plenary
+    {d:'2026-05-15',s:'10:50',e:'11:30',t:'Obstetric Critical Care',sp:"Dr Patrick Olang'",hall:'Plenary 2 · Victoria Hall 1'},
+    // Day 2 · Mid-morning — Victoria Hall 1
+    {d:'2026-05-15',s:'11:30',e:'11:55',t:'Safety of Peripheral Vaso-actives',sp:'Dr Abdirahman Farah',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'11:55',e:'12:20',t:'Going Tubeless: High Flow Nasal Cannula',sp:'Dr Brenda Kunga',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'12:20',e:'12:45',t:'Bubble CPAP: Why Oscillations Matter',sp:'Dr Brian Maugo',hall:'Victoria Hall 1'},
+    // Day 2 · Mid-morning — Victoria Hall 3
+    {d:'2026-05-15',s:'11:30',e:'11:55',t:'Recognizing Right Heart Failure in the ICU',sp:'Dr Barbara Karau',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'11:55',e:'12:20',t:'Midodrine in the ICU: Liberating the Bed',sp:'Dr Mbatha Wambua',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'12:20',e:'12:45',t:'Arterial Lines for All?',sp:'Dr Betty Sirera',hall:'Victoria Hall 3'},
+    // Day 2 · Afternoon — Victoria Hall 1
+    {d:'2026-05-15',s:'13:55',e:'14:20',t:'Are We Creating Survivors or Victims?',sp:'Dr Esther Nafula',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'14:20',e:'14:45',t:'Low-Cost Comfort Care',sp:'Lilian Karanja',hall:'Victoria Hall 1'},
+    {d:'2026-05-15',s:'14:45',e:'15:10',t:'Ethical Dilemmas in ICU',sp:'Prof Sayed Karar',hall:'Victoria Hall 1'},
+    // Day 2 · Afternoon — Victoria Hall 3
+    {d:'2026-05-15',s:'13:55',e:'14:20',t:'RSI Trial: Etomidate vs. Ketamine (2025)',sp:'Dr Mohamed Billow',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'14:20',e:'14:45',t:'Difficult Airway Society: 2025 Guidelines',sp:'Dr Charles Kabetu',hall:'Victoria Hall 3'},
+    {d:'2026-05-15',s:'14:45',e:'15:10',t:'Cardiac Arrest: Manual vs. Mechanical Ventilation',sp:'Dr Benjamin Wachira',hall:'Victoria Hall 3'},
+  ];
+
+  function p2(n) { return String(n).padStart(2,'0'); }
+
+  function nowHHMM() {
+    const n = new Date();
+    return p2(n.getHours()) + ':' + p2(n.getMinutes());
+  }
+
+  function todayDate() { return new Date().toISOString().split('T')[0]; }
+
+  function addMins(hhmm, delta) {
+    const [h, m] = hhmm.split(':').map(Number);
+    const t = h * 60 + m + delta;
+    return p2(Math.floor(t / 60) % 24) + ':' + p2((t + 60) % 60);
+  }
+
+  function msUntil(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    const now = new Date();
+    const end = new Date(now);
+    end.setHours(h, m, 0, 0);
+    return end - now;
+  }
+
+  // Toast stack: offset each toast so they don't overlap
+  let toastCount = 0;
+  function showToast(html, type) {
+    const el = document.createElement('div');
+    el.className = `ccsk-toast ccsk-toast-${type}`;
+    el.style.bottom = (72 + toastCount * 90) + 'px';
+    el.innerHTML = html;
+    document.body.appendChild(el);
+    toastCount++;
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => {
+      el.classList.remove('show');
+      setTimeout(() => { el.remove(); toastCount = Math.max(0, toastCount - 1); }, 400);
+    }, 9000);
+    // Browser notification (if allowed)
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+      new Notification('CCSK 2026 · ' + (type === 'warn' ? '⏱ 5 min to go' : '🔔 Time\'s up'), { body: el.textContent.trim() });
+    }
+  }
+
+  const firedAlerts = new Set();
+
+  function checkAlerts() {
+    const date = todayDate();
+    const now  = nowHHMM();
+    SCHED.forEach((sess, i) => {
+      if (sess.d !== date) return;
+      const warnKey = 'w' + i;
+      const upKey   = 'u' + i;
+      if (now === addMins(sess.e, -5) && !firedAlerts.has(warnKey)) {
+        firedAlerts.add(warnKey);
+        showToast(`⏱️ <strong>5 min to go</strong><br>${sess.t}<br><small>${sess.sp ? sess.sp + ' · ' : ''}${sess.hall}</small>`, 'warn');
+      }
+      if (now === sess.e && !firedAlerts.has(upKey)) {
+        firedAlerts.add(upKey);
+        showToast(`🔔 <strong>Time's up!</strong><br>${sess.t}<br><small>${sess.sp ? sess.sp + ' · ' : ''}${sess.hall}</small>`, 'up');
+      }
+    });
+  }
+
+  function updateNowBar() {
+    const date = todayDate();
+    const now  = nowHHMM();
+    const bar  = document.getElementById('ccsk-now');
+    // Find session with smallest remaining time (ends soonest)
+    const live = SCHED.filter(s => s.d === date && s.s <= now && s.e > now)
+                      .sort((a, b) => a.e.localeCompare(b.e));
+    if (!live.length) { bar.classList.add('d-none'); document.body.style.paddingBottom = ''; return; }
+    const curr = live[0];
+    const ms   = msUntil(curr.e);
+    const mins = Math.floor(ms / 60000);
+    const secs = Math.floor((ms % 60000) / 1000);
+    const parallel = live.length > 1 ? ` +${live.length - 1} parallel` : '';
+    document.getElementById('cn-title').textContent = curr.t;
+    document.getElementById('cn-meta').textContent  = (curr.sp ? curr.sp + ' · ' : '') + curr.hall + parallel;
+    const timer = document.getElementById('cn-timer');
+    timer.textContent = p2(mins) + ':' + p2(secs);
+    timer.className   = 'cn-timer' + (mins < 5 ? ' urgent' : '');
+    bar.classList.remove('d-none');
+    document.body.style.paddingBottom = '64px';
+  }
+
+  // Request browser notification permission once
+  if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+
+  checkAlerts();
+  updateNowBar();
+  setInterval(checkAlerts,  30000);   // fire alerts every 30 s
+  setInterval(updateNowBar, 1000);    // update countdown every second
 </script>
 </body>
 </html>
