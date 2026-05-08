@@ -1249,6 +1249,14 @@
     setTimeout(() => el.classList.add('d-none'), 5000);
   }
 
+  function fmtTs(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    if (isNaN(d)) return String(ts);
+    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}) + ' ' +
+           d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  }
+
   window.renderLFItems = function() {
     const list  = document.getElementById('lf-list');
     const empty = document.getElementById('lf-empty');
@@ -1279,7 +1287,7 @@
           ${item.loc     ? `<span><i class="fas fa-map-marker-alt"></i>${esc(item.loc)}</span>` : ''}
           <span><i class="fas fa-user"></i>${esc(item.name)}</span>
           <span><i class="fas fa-phone-alt"></i>${esc(item.contact)}</span>
-          ${item.ts      ? `<span><i class="fas fa-clock"></i>${esc(item.ts)}</span>` : ''}
+          ${item.ts      ? `<span><i class="fas fa-clock"></i>${esc(fmtTs(item.ts))}</span>` : ''}
         </div>
         ${!item.resolved ? `<button class="lf-claim-btn" onclick="lfClaim('${esc(item.id)}', this)">${claimLabel}</button>` : ''}
       `;
