@@ -36,6 +36,21 @@
     .theme-bar strong { font-size: .85rem; }
 
     /* ── Day tabs ── */
+    .day-tabs-wrap { position:relative; }
+    .day-tabs-wrap::after {
+      content:''; pointer-events:none;
+      position:absolute; top:0; right:0; width:60px; height:100%;
+      background:linear-gradient(to right, transparent, var(--blue));
+    }
+    .nav-swipe-hint {
+      background:var(--blue); color:rgba(255,255,255,.75);
+      font-size:.72rem; font-weight:600; text-align:center;
+      padding:3px 12px 4px; letter-spacing:.02em;
+      transition:max-height .4s ease, opacity .4s ease, padding .4s ease;
+      max-height:30px; overflow:hidden;
+    }
+    .nav-swipe-hint.hidden { max-height:0; opacity:0; padding-top:0; padding-bottom:0; }
+    .nav-swipe-hint .arrow { display:inline-block; animation:nudge-r 1.2s ease-in-out infinite; }
     .day-tabs {
       background: var(--blue);
       border-bottom: 3px solid var(--red);
@@ -249,13 +264,16 @@
     </div>
   </div>
   <!-- Day tabs -->
-  <ul class="nav day-tabs" id="dayTabs">
-    <li class="nav-item"><button class="nav-link active" onclick="showDay('pre')">Wed 13 May &nbsp;<small>Pre-Conference</small></button></li>
-    <li class="nav-item"><button class="nav-link" onclick="showDay('day1')">Thu 14 May &nbsp;<small>Day 1</small></button></li>
-    <li class="nav-item"><button class="nav-link" onclick="showDay('day2')">Fri 15 May &nbsp;<small>Day 2</small></button></li>
-    <li class="nav-item"><button class="nav-link" onclick="showDay('speakers')"><i class="fas fa-user-tie me-1"></i><small>Speakers</small></button></li>
-    <li class="nav-item"><button class="nav-link" onclick="showDay('lostfound')"><i class="fas fa-search me-1"></i><small>Lost & Found</small></button></li>
-  </ul>
+  <div class="day-tabs-wrap">
+    <ul class="nav day-tabs" id="dayTabs">
+      <li class="nav-item"><button class="nav-link active" onclick="showDay('pre')">Wed 13 May &nbsp;<small>Pre-Conference</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('day1')">Thu 14 May &nbsp;<small>Day 1</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('day2')">Fri 15 May &nbsp;<small>Day 2</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('speakers')"><i class="fas fa-user-tie me-1"></i><small>Speakers</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('lostfound')"><i class="fas fa-search me-1"></i><small>Lost &amp; Found</small></button></li>
+    </ul>
+  </div>
+  <div class="nav-swipe-hint" id="navSwipeHint">Swipe the menu to see Speakers &amp; Lost &amp; Found <span class="arrow">👉</span></div>
 </header>
 
 <div class="theme-bar">
@@ -1012,6 +1030,12 @@
 
   // Set initial colour for default tab (Pre-Conference)
   document.documentElement.style.setProperty('--day-color', DAY_COLORS['pre']);
+
+  // Nav swipe hint — hide after first tab tap or after 6 s
+  const navHint = document.getElementById('navSwipeHint');
+  const hideNavHint = () => navHint && navHint.classList.add('hidden');
+  document.querySelectorAll('.day-tabs .nav-link').forEach(b => b.addEventListener('click', hideNavHint, {once:true}));
+  setTimeout(hideNavHint, 6000);
 
   // Auto-switch to today's day
   const today = new Date().toISOString().split('T')[0];
