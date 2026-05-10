@@ -25,6 +25,19 @@
       background: #fff; border-radius: 50%; padding: 4px; }
     .site-header h1 { font-size: 1.15rem; font-weight: 700; margin: 0; }
     .site-header .sub { font-size: .78rem; opacity: .85; }
+    .sponsor-main { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; }
+    .sponsor-main-label { font-size:.58rem; text-transform:uppercase; letter-spacing:.08em;
+      opacity:.7; margin-bottom:4px; }
+    .sponsor-main img { height:40px; object-fit:contain; background:#fff;
+      border-radius:8px; padding:4px 10px; }
+    /* ── Workshop sponsor strips ── */
+    .wk-sponsors { display:flex; align-items:center; gap:10px; margin-top:8px;
+      padding:6px 10px; background:rgba(255,255,255,.12); border-radius:8px;
+      flex-wrap:wrap; }
+    .wk-sponsors-label { font-size:.6rem; text-transform:uppercase; letter-spacing:.08em;
+      opacity:.75; white-space:nowrap; font-weight:700; }
+    .wk-sponsors img { height:26px; object-fit:contain; background:#fff;
+      border-radius:4px; padding:3px 7px; }
     .theme-bar {
       background: var(--red);
       color: #fff;
@@ -256,11 +269,17 @@
 
 <!-- Header -->
 <header class="site-header">
-  <div class="d-flex align-items-center gap-3 mb-2">
-    <img src="ccsk-logo.png" class="logo" alt="CCSK Logo">
-    <div>
-      <h1>13th CCSK Annual Scientific Conference</h1>
-      <div class="sub">13–15 May 2026 &nbsp;|&nbsp; Argyle Grand Hotel, Nairobi</div>
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center gap-3">
+      <img src="ccsk-logo.png" class="logo" alt="CCSK Logo">
+      <div>
+        <h1>13th CCSK Annual Scientific Conference</h1>
+        <div class="sub">13–15 May 2026 &nbsp;|&nbsp; Argyle Grand Hotel, Nairobi</div>
+      </div>
+    </div>
+    <div class="sponsor-main">
+      <div class="sponsor-main-label">Main Sponsor</div>
+      <img src="logos/fresenius.png" alt="Fresenius Kabi">
     </div>
   </div>
   <!-- Day tabs -->
@@ -296,9 +315,14 @@
         <div class="workshop-detail">
           <div class="wk-header">
             <div class="wk-title">Airway Management in the ICU — Navigating the Physiological Frontier</div>
-            <div class="wk-sub">Victoria Hall 1 &nbsp;|&nbsp; 08:00 – 16:30 &nbsp;|&nbsp; Based on DAS 2025 Guidelines</div>
+            <div class="wk-sub">Victoria Hall 1 &nbsp;|&nbsp; 08:00 – 16:30 &nbsp;·&nbsp; Based on DAS 2025 Guidelines</div>
             <div class="wk-faculty"><i class="fas fa-chalkboard-teacher"></i><strong>Lead:</strong> Dr Kevin Umani</div>
             <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Charles Kabetu &nbsp;·&nbsp; Dr Mohamed Billow &nbsp;·&nbsp; Dr Sheila Gitau</div>
+            <div class="wk-sponsors">
+              <span class="wk-sponsors-label">Sponsors</span>
+              <img src="logos/ge.png" alt="GE Healthcare">
+              <img src="logos/nxs.png" alt="NXS">
+            </div>
           </div>
           <div class="wk-body">
 
@@ -348,9 +372,14 @@
     <div class="workshop-detail">
       <div class="wk-header">
         <div class="wk-title">Advanced Mechanical Ventilation: Beyond 6 ml/kg</div>
-        <div class="wk-sub">Victoria Hall 3 &nbsp;|&nbsp; 08:00 – 16:00 &nbsp;|&nbsp; Flipped-Classroom Hybrid</div>
+        <div class="wk-sub">Victoria Hall 3 &nbsp;|&nbsp; 08:00 – 16:00 &nbsp;·&nbsp; Flipped-Classroom Hybrid</div>
         <div class="wk-faculty"><i class="fas fa-chalkboard-teacher"></i><strong>Lead:</strong> Dr Idris Chikophe (ICUDemy)</div>
         <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Sally Getugi &nbsp;·&nbsp; Dr Betty Sirera &nbsp;·&nbsp; Dr Carolyne Njoki &nbsp;·&nbsp; Dr David Odaba</div>
+        <div class="wk-sponsors">
+          <span class="wk-sponsors-label">Sponsors</span>
+          <img src="logos/drager.png" alt="Dräger">
+          <img src="logos/nexus.png" alt="Nexus Medical">
+        </div>
       </div>
       <div class="wk-body">
 
@@ -526,9 +555,13 @@
     <div class="workshop-detail">
       <div class="wk-header">
         <div class="wk-title">Point of Care Ultrasound (POCUS) — The AI-Driven Diagnostic Standard</div>
-        <div class="wk-sub">Victoria Hall 2 &nbsp;|&nbsp; 08:00 – 17:00 &nbsp;|&nbsp; Didactic + Hands-On Scanning</div>
+        <div class="wk-sub">Victoria Hall 2 &nbsp;|&nbsp; 08:00 – 17:00 &nbsp;·&nbsp; Didactic + Hands-On Scanning</div>
         <div class="wk-faculty"><i class="fas fa-chalkboard-teacher"></i><strong>Lead:</strong> Dr Romeo Wahome</div>
         <div class="wk-faculty"><i class="fas fa-users"></i><strong>Faculty:</strong> Dr Susan Mutahi &nbsp;·&nbsp; Derick (Instructor 1) &nbsp;·&nbsp; Dr Emma (Instructor 2) &nbsp;·&nbsp; Dr Susan / Derick (Instructor 3) &nbsp;·&nbsp; Brian (Instructor 5)</div>
+        <div class="wk-sponsors">
+          <span class="wk-sponsors-label">Sponsors</span>
+          <img src="logos/hatch.png" alt="Hatch Technologies">
+        </div>
       </div>
       <div class="wk-body">
 
