@@ -210,6 +210,48 @@
       text-align: center; font-size: .75rem; padding: 16px; margin-top: 32px; }
     footer a { color: rgba(255,255,255,.85); }
 
+    /* ── Live Polls ── */
+    .poll-header { text-align:center; padding:24px 0 8px; }
+    .poll-heading { font-size:1.4rem; font-weight:800; color:var(--blue); }
+    .poll-heading i { color:var(--red); }
+    .poll-sub { color:#555; font-size:.85rem; margin-top:4px; }
+
+    .poll-card { background:#fff; border-radius:14px; padding:20px;
+      box-shadow:0 2px 12px rgba(0,0,0,.1); margin-bottom:18px; }
+    .poll-q { font-size:1.02rem; font-weight:700; color:#111; margin-bottom:14px; line-height:1.4; }
+    .poll-live-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    .poll-live-dot { width:8px; height:8px; border-radius:50%; background:var(--red);
+      animation:blink-dot 1.2s ease-in-out infinite; }
+    .poll-live-label { font-size:.65rem; font-weight:800; letter-spacing:1.2px;
+      text-transform:uppercase; color:var(--red); }
+
+    .poll-options { display:flex; flex-direction:column; gap:10px; }
+    .poll-opt-btn { width:100%; text-align:left; background:#f0f4f8; border:2px solid transparent;
+      border-radius:10px; padding:11px 14px; font-size:.88rem; font-weight:600;
+      cursor:pointer; transition:all .2s; color:#222; position:relative; overflow:hidden; }
+    .poll-opt-btn:hover:not(:disabled) { border-color:var(--blue); background:#e8f0ff; }
+    .poll-opt-btn.voted { border-color:var(--blue); background:#e8f0ff; cursor:default; }
+    .poll-opt-btn.winner { border-color:var(--red); }
+    .poll-opt-btn:disabled { cursor:default; }
+
+    .poll-bar-bg { position:absolute; top:0; left:0; height:100%;
+      background:rgba(0,48,135,.08); border-radius:10px;
+      transition:width .6s ease; z-index:0; }
+    .poll-opt-btn.winner .poll-bar-bg { background:rgba(200,16,46,.10); }
+    .poll-opt-text { position:relative; z-index:1; display:flex;
+      justify-content:space-between; align-items:center; gap:8px; }
+    .poll-opt-label { flex:1; }
+    .poll-opt-pct { font-size:.82rem; color:var(--blue); font-weight:700; white-space:nowrap; }
+    .poll-opt-btn.winner .poll-opt-pct { color:var(--red); }
+    .poll-total { font-size:.72rem; color:#888; margin-top:10px; text-align:right; }
+
+    .poll-voted-pill { display:inline-block; background:#e8f5e9; color:#2e7d32;
+      border-radius:20px; padding:3px 10px; font-size:.7rem; font-weight:700;
+      margin-top:10px; }
+    .poll-empty { text-align:center; color:#aaa; font-size:.88rem;
+      padding:50px 20px; line-height:2; }
+    .poll-loading { text-align:center; padding:40px 0; color:#888; font-size:.85rem; }
+
     /* ── Lost & Found ── */
     .lf-header { text-align:center; padding: 24px 0 8px; }
     .lf-heading { font-size: 1.4rem; font-weight: 800; color: var(--blue); }
@@ -301,9 +343,10 @@
       <li class="nav-item"><button class="nav-link" onclick="showDay('day2')">Fri 15 May &nbsp;<small>Day 2</small></button></li>
       <li class="nav-item"><button class="nav-link" onclick="showDay('speakers')"><i class="fas fa-user-tie me-1"></i><small>Speakers</small></button></li>
       <li class="nav-item"><button class="nav-link" onclick="showDay('lostfound')"><i class="fas fa-search me-1"></i><small>Lost &amp; Found</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('poll')"><i class="fas fa-chart-bar me-1"></i><small>Live Poll</small></button></li>
     </ul>
   </div>
-  <div class="nav-swipe-hint" id="navSwipeHint">Swipe the menu to see Speakers &amp; Lost &amp; Found <span class="arrow">👉</span></div>
+  <div class="nav-swipe-hint" id="navSwipeHint">Swipe to see Speakers, Lost &amp; Found &amp; Live Polls <span class="arrow">👉</span></div>
 </header>
 
 <div class="theme-bar">
@@ -892,6 +935,20 @@
     </div>
   </div>
 
+  <!-- LIVE POLLS -->
+  <div id="day-poll" class="d-none">
+    <div class="poll-header">
+      <h2 class="poll-heading"><i class="fas fa-chart-bar"></i> Live Polls</h2>
+      <p class="poll-sub">Vote on hot topics — results update in real time.</p>
+    </div>
+    <div id="poll-loading" class="poll-loading"><i class="fas fa-spinner fa-spin"></i> Loading polls…</div>
+    <div id="poll-list"></div>
+    <div id="poll-empty" class="poll-empty d-none">
+      <i class="fas fa-comment-dots" style="font-size:2rem; opacity:.3; display:block; margin-bottom:8px;"></i>
+      No active polls yet — check back soon!
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -963,10 +1020,11 @@
     day1:     '#1a237e',   // deep blue  — Conference Day 1
     day2:     '#2e7d32',   // forest green — Conference Day 2
     speakers: '#6a1b9a',   // purple     — Speakers
+    poll:     '#c8102e',   // red        — Live Polls
   };
 
   function showDay(id) {
-    ['pre','day1','day2','speakers','lostfound'].forEach(d => {
+    ['pre','day1','day2','speakers','lostfound','poll'].forEach(d => {
       document.getElementById('day-' + d).classList.add('d-none');
     });
     document.getElementById('day-' + id).classList.remove('d-none');
@@ -975,6 +1033,7 @@
     document.documentElement.style.setProperty('--day-color', DAY_COLORS[id] || '#003087');
     if (id === 'speakers') renderSpeakers();
     if (id === 'lostfound' && window.renderLFItems) window.renderLFItems();
+    if (id === 'poll') pollInit();
     window.scrollTo(0, 0);
   }
 
@@ -1388,6 +1447,130 @@
   // Initialise when Lost & Found tab is first opened
   document.querySelector('[onclick="showDay(\'lostfound\')"]')
     .addEventListener('click', () => { if (!lfItems.length) lfInit(); }, { once: true });
+
+  // ── Live Polls ─────────────────────────────────────────────────────────────
+
+  // Persistent device ID for duplicate-vote prevention
+  const DEVICE_ID = (() => {
+    let id = localStorage.getItem('ccsk_device_id');
+    if (!id) {
+      id = 'dev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+      localStorage.setItem('ccsk_device_id', id);
+    }
+    return id;
+  })();
+
+  let pollData      = [];          // latest polls from server
+  let pollVoted     = JSON.parse(localStorage.getItem('ccsk_poll_voted') || '{}');
+  let pollInterval  = null;
+  let pollStarted   = false;
+
+  function pollInit() {
+    if (!pollStarted) {
+      pollStarted = true;
+      pollFetch();
+      pollInterval = setInterval(pollFetch, 20000);
+    }
+  }
+
+  async function pollFetch() {
+    if (!GS_URL) {
+      document.getElementById('poll-loading').classList.add('d-none');
+      document.getElementById('poll-empty').classList.remove('d-none');
+      return;
+    }
+    try {
+      const res  = await fetch(GS_URL + '?type=polls&t=' + Date.now());
+      const data = await res.json();
+      pollData = Array.isArray(data) ? data : [];
+      renderPolls();
+    } catch(e) {
+      document.getElementById('poll-loading').classList.add('d-none');
+    }
+  }
+
+  function renderPolls() {
+    const loading = document.getElementById('poll-loading');
+    const list    = document.getElementById('poll-list');
+    const empty   = document.getElementById('poll-empty');
+
+    loading.classList.add('d-none');
+
+    if (!pollData.length) {
+      list.innerHTML = '';
+      empty.classList.remove('d-none');
+      return;
+    }
+    empty.classList.add('d-none');
+
+    list.innerHTML = pollData.map(poll => {
+      const voted      = pollVoted[poll.id] !== undefined;
+      const myChoice   = pollVoted[poll.id];
+      const maxVotes   = Math.max(...poll.votes, 1);
+
+      const optionsHtml = poll.options.map((opt, i) => {
+        const pct     = poll.total > 0 ? Math.round((poll.votes[i] / poll.total) * 100) : 0;
+        const isWinner = voted && poll.votes[i] === maxVotes && poll.votes[i] > 0;
+        const isMine   = voted && myChoice === i;
+        const classes  = ['poll-opt-btn',
+          voted ? 'voted' : '',
+          isWinner ? 'winner' : ''].filter(Boolean).join(' ');
+
+        if (voted) {
+          return `<button class="${classes}" disabled>
+            <div class="poll-bar-bg" style="width:${pct}%"></div>
+            <div class="poll-opt-text">
+              <span class="poll-opt-label">${esc(opt)}${isMine ? ' ✓' : ''}</span>
+              <span class="poll-opt-pct">${pct}%</span>
+            </div>
+          </button>`;
+        } else {
+          return `<button class="poll-opt-btn" onclick="castVote('${esc(poll.id)}', ${i})">
+            <div class="poll-opt-text">
+              <span class="poll-opt-label">${esc(opt)}</span>
+            </div>
+          </button>`;
+        }
+      }).join('');
+
+      return `<div class="poll-card">
+        <div class="poll-live-row">
+          <div class="poll-live-dot"></div>
+          <div class="poll-live-label">Live</div>
+        </div>
+        <div class="poll-q">${esc(poll.question)}</div>
+        <div class="poll-options">${optionsHtml}</div>
+        ${voted ? `<div class="poll-voted-pill">✓ Your vote is counted</div>` : ''}
+        <div class="poll-total">${poll.total} vote${poll.total !== 1 ? 's' : ''} cast</div>
+      </div>`;
+    }).join('');
+  }
+
+  window.castVote = async function(pollId, optionIndex) {
+    if (pollVoted[pollId] !== undefined) return;
+
+    // Optimistic update
+    pollVoted[pollId] = optionIndex;
+    localStorage.setItem('ccsk_poll_voted', JSON.stringify(pollVoted));
+    const poll = pollData.find(p => p.id === pollId);
+    if (poll) {
+      poll.votes[optionIndex] = (poll.votes[optionIndex] || 0) + 1;
+      poll.total = (poll.total || 0) + 1;
+    }
+    renderPolls();
+
+    // Send to server
+    if (GS_URL) {
+      try {
+        await fetch(GS_URL, {
+          method: 'POST', mode: 'no-cors',
+          body: JSON.stringify({ action: 'poll_vote', poll_id: pollId,
+                                 option_index: optionIndex, device_id: DEVICE_ID }),
+          headers: {'Content-Type': 'application/json'}
+        });
+      } catch(e) {}
+    }
+  };
 </script>
 </body>
 </html>
