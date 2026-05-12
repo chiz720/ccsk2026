@@ -1783,32 +1783,35 @@
 
   // ── Push Notifications (OneSignal) ────────────────────────────────────────
 
+  let _OS = null;  // OneSignal instance, set once SDK initialises
+
   function setNotifBtnOn() {
-    const btn = document.getElementById('notif-btn');
-    const icon = document.getElementById('notif-icon');
+    const btn   = document.getElementById('notif-btn');
+    const icon  = document.getElementById('notif-icon');
     const label = document.getElementById('notif-label');
     if (!btn) return;
-    icon.className = 'fas fa-bell';
+    icon.className  = 'fas fa-bell';
     label.textContent = 'On';
     btn.style.background = 'rgba(0,200,80,.3)';
-    btn.onclick = null;
     btn.title = 'Alerts enabled';
   }
 
-  window.requestNotifPerm = function() {
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      try {
-        await OneSignal.Notifications.requestPermission();
-        const granted = OneSignal.Notifications.permission;
-        if (granted) setNotifBtnOn();
-      } catch(e) {}
-    });
+  window.requestNotifPerm = async function() {
+    const btn = document.getElementById('notif-btn');
+    if (btn) { btn.style.opacity = '.6'; btn.disabled = true; }
+    try {
+      if (_OS) {
+        await _OS.Notifications.requestPermission();
+        if (_OS.Notifications.permission) setNotifBtnOn();
+      }
+    } catch(e) {}
+    if (btn) { btn.style.opacity = '1'; btn.disabled = false; }
   };
 
-  // Reflect existing subscription state once SDK loads
+  // Store instance and reflect existing state as soon as SDK is ready
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
+    _OS = OneSignal;
     if (OneSignal.Notifications.permission) setNotifBtnOn();
   });
 
