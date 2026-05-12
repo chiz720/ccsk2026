@@ -6,6 +6,14 @@
   <title>CCSK 2026 — Scientific Program</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- OneSignal Web Push — replace YOUR_ONESIGNAL_APP_ID after creating your account at onesignal.com -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({ appId: "YOUR_ONESIGNAL_APP_ID", notifyButton: { enable: false } });
+    });
+  </script>
   <style>
     :root {
       --blue:    #003087;
@@ -252,6 +260,72 @@
       padding:50px 20px; line-height:2; }
     .poll-loading { text-align:center; padding:40px 0; color:#888; font-size:.85rem; }
 
+    /* ── Q&A ── */
+    .qa-header { text-align:center; padding:24px 0 8px; }
+    .qa-heading { font-size:1.4rem; font-weight:800; color:var(--blue); }
+    .qa-heading i { color:var(--red); }
+    .qa-sub { color:#555; font-size:.85rem; margin-top:4px; }
+
+    .qa-form-card { background:#fff; border-radius:12px; padding:20px;
+      box-shadow:0 2px 12px rgba(0,0,0,.1); margin-bottom:20px; }
+    .qa-form-title { font-weight:700; color:var(--blue); font-size:.95rem; margin-bottom:12px; }
+    .qa-select { width:100%; border:1.5px solid #ddd; border-radius:8px;
+      padding:9px 12px; font-size:.85rem; margin-bottom:8px;
+      outline:none; background:#fff; color:#333; appearance:auto; }
+    .qa-select:focus { border-color:var(--blue); }
+    .qa-textarea { width:100%; border:1.5px solid #ddd; border-radius:8px;
+      padding:9px 12px; font-size:.85rem; resize:vertical; min-height:72px;
+      outline:none; font-family:inherit; margin-bottom:8px; }
+    .qa-textarea:focus { border-color:var(--blue); }
+    .qa-name-row { display:flex; gap:8px; margin-bottom:8px; }
+    .qa-input { flex:1; border:1.5px solid #ddd; border-radius:8px;
+      padding:9px 12px; font-size:.85rem; outline:none; }
+    .qa-input:focus { border-color:var(--blue); }
+    .qa-submit-btn { width:100%; background:var(--blue); color:#fff; border:none;
+      border-radius:8px; padding:11px; font-weight:700; font-size:.9rem;
+      cursor:pointer; transition:background .2s; }
+    .qa-submit-btn:hover { background:#004aad; }
+    .qa-msg { margin-top:10px; padding:9px 12px; border-radius:8px;
+      font-size:.82rem; font-weight:600; text-align:center; }
+    .qa-msg.ok  { background:#e8f5e9; color:#2e7d32; }
+    .qa-msg.err { background:#fdecea; color:#c62828; }
+
+    .qa-filter-row { display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:14px; }
+    .qa-filter-label { font-size:.78rem; font-weight:700; color:var(--blue);
+      text-transform:uppercase; letter-spacing:.5px; }
+    .qa-refresh-btn { background:none; border:none; font-size:.78rem; color:#888;
+      cursor:pointer; padding:4px 8px; border-radius:6px; }
+    .qa-refresh-btn:hover { background:#f0f0f0; }
+
+    .qa-list { display:flex; flex-direction:column; gap:12px; }
+    .qa-empty { text-align:center; color:#aaa; font-size:.85rem; padding:40px 0; line-height:2; }
+
+    .qa-card { background:#fff; border-radius:12px; padding:14px 16px;
+      box-shadow:0 2px 8px rgba(0,0,0,.08); border-left:4px solid var(--blue); }
+    .qa-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+    .qa-session-tag { font-size:.65rem; font-weight:800; letter-spacing:.8px;
+      text-transform:uppercase; color:var(--blue); background:#e8f0ff;
+      padding:2px 8px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+    .qa-question { font-size:.9rem; font-weight:600; color:#111; margin:8px 0 4px; line-height:1.45; }
+    .qa-meta { font-size:.72rem; color:#888; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .qa-upvote-btn { display:flex; align-items:center; gap:5px; background:none;
+      border:1.5px solid #ddd; border-radius:20px; padding:3px 10px;
+      font-size:.75rem; font-weight:700; cursor:pointer; color:#555;
+      transition:all .2s; white-space:nowrap; }
+    .qa-upvote-btn:hover:not(:disabled) { border-color:var(--blue); color:var(--blue); background:#e8f0ff; }
+    .qa-upvote-btn.voted { border-color:var(--blue); color:var(--blue);
+      background:#e8f0ff; cursor:default; }
+    .qa-upvote-btn .up-count { font-weight:800; }
+
+    /* ── Notification bell ── */
+    .notif-btn { background:rgba(255,255,255,.15); border:none; border-radius:8px;
+      color:#fff; padding:6px 10px; cursor:pointer; font-size:.9rem;
+      transition:background .2s; display:flex; align-items:center; gap:5px; flex-shrink:0; }
+    .notif-btn:hover { background:rgba(255,255,255,.28); }
+    .notif-btn .nb-label { font-size:.65rem; font-weight:700; letter-spacing:.5px;
+      text-transform:uppercase; line-height:1; }
+
     /* ── Lost & Found ── */
     .lf-header { text-align:center; padding: 24px 0 8px; }
     .lf-heading { font-size: 1.4rem; font-weight: 800; color: var(--blue); }
@@ -330,9 +404,15 @@
         <div class="sub">13–15 May 2026 &nbsp;|&nbsp; Argyle Grand Hotel, Nairobi</div>
       </div>
     </div>
-    <div class="sponsor-main">
-      <div class="sponsor-main-label">Main Sponsor</div>
-      <img src="logos/fresenius.png" alt="Fresenius Kabi">
+    <div class="d-flex align-items-center gap-2">
+      <button class="notif-btn" id="notif-btn" onclick="requestNotifPerm()" title="Get session alerts">
+        <i class="fas fa-bell" id="notif-icon"></i>
+        <span class="nb-label" id="notif-label">Alerts</span>
+      </button>
+      <div class="sponsor-main">
+        <div class="sponsor-main-label">Main Sponsor</div>
+        <img src="logos/fresenius.png" alt="Fresenius Kabi">
+      </div>
     </div>
   </div>
   <!-- Day tabs -->
@@ -344,9 +424,10 @@
       <li class="nav-item"><button class="nav-link" onclick="showDay('speakers')"><i class="fas fa-user-tie me-1"></i><small>Speakers</small></button></li>
       <li class="nav-item"><button class="nav-link" onclick="showDay('lostfound')"><i class="fas fa-search me-1"></i><small>Lost &amp; Found</small></button></li>
       <li class="nav-item"><button class="nav-link" onclick="showDay('poll')"><i class="fas fa-chart-bar me-1"></i><small>Live Poll</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('qa')"><i class="fas fa-question-circle me-1"></i><small>Ask</small></button></li>
     </ul>
   </div>
-  <div class="nav-swipe-hint" id="navSwipeHint">Swipe to see Speakers, Lost &amp; Found &amp; Live Polls <span class="arrow">👉</span></div>
+  <div class="nav-swipe-hint" id="navSwipeHint">Swipe for Speakers · Lost &amp; Found · Live Poll · Ask <span class="arrow">👉</span></div>
 </header>
 
 <div class="theme-bar">
@@ -949,6 +1030,60 @@
     </div>
   </div>
 
+  <!-- Q&A -->
+  <div id="day-qa" class="d-none">
+    <div class="qa-header">
+      <h2 class="qa-heading"><i class="fas fa-question-circle"></i> Ask a Question</h2>
+      <p class="qa-sub">Submit your question for the current session. Upvote others to help chairs prioritise.</p>
+    </div>
+
+    <div class="qa-form-card">
+      <div class="qa-form-title">Your Question</div>
+      <select id="qa-session" class="qa-select">
+        <option value="">— Select the session —</option>
+        <optgroup label="Pre-Conference · 13 May">
+          <option>Airway Management Workshop</option>
+          <option>Advanced Mechanical Ventilation Workshop</option>
+          <option>AI-Driven POCUS Workshop</option>
+        </optgroup>
+        <optgroup label="Day 1 · 14 May">
+          <option>Opening Ceremony</option>
+          <option>The Digital ICU</option>
+          <option>Deriving Cardiac Output</option>
+          <option>Physics Based</option>
+          <option>Simulation</option>
+          <option>Trauma</option>
+          <option>Plenary: Who Will Staff the ICU?</option>
+          <option>Fresenius Symposium</option>
+          <option>Critical Care Within and Without</option>
+          <option>Renal Salvation</option>
+        </optgroup>
+        <optgroup label="Day 2 · 15 May">
+          <option>Plenary: The Obstetric Patient in the ICU</option>
+          <option>Ventilation and Liberation</option>
+          <option>Tiny Tots</option>
+          <option>Shock</option>
+          <option>End of Life</option>
+          <option>Hot Topics</option>
+        </optgroup>
+      </select>
+      <textarea id="qa-question" class="qa-textarea" placeholder="Type your question here…" maxlength="300"></textarea>
+      <div class="qa-name-row">
+        <input id="qa-name" class="qa-input" type="text" placeholder="Your name (optional)" maxlength="60">
+      </div>
+      <button class="qa-submit-btn" onclick="qaSubmit()"><i class="fas fa-paper-plane"></i> Submit Question</button>
+      <div id="qa-msg" class="qa-msg d-none"></div>
+    </div>
+
+    <div class="qa-filter-row">
+      <div class="qa-filter-label"><i class="fas fa-fire" style="color:var(--red)"></i> Top Questions</div>
+      <button class="qa-refresh-btn" onclick="qaFetch()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    </div>
+    <div id="qa-list" class="qa-list">
+      <div class="qa-empty" id="qa-empty"><i class="fas fa-microphone-slash"></i><br>No questions yet — be the first!</div>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -1021,10 +1156,11 @@
     day2:     '#2e7d32',   // forest green — Conference Day 2
     speakers: '#6a1b9a',   // purple     — Speakers
     poll:     '#c8102e',   // red        — Live Polls
+    qa:       '#00695c',   // teal       — Q&A
   };
 
   function showDay(id) {
-    ['pre','day1','day2','speakers','lostfound','poll'].forEach(d => {
+    ['pre','day1','day2','speakers','lostfound','poll','qa'].forEach(d => {
       document.getElementById('day-' + d).classList.add('d-none');
     });
     document.getElementById('day-' + id).classList.remove('d-none');
@@ -1034,6 +1170,7 @@
     if (id === 'speakers') renderSpeakers();
     if (id === 'lostfound' && window.renderLFItems) window.renderLFItems();
     if (id === 'poll') pollInit();
+    if (id === 'qa')   qaInit();
     window.scrollTo(0, 0);
   }
 
@@ -1545,6 +1682,137 @@
       </div>`;
     }).join('');
   }
+
+  // ── Q&A ──────────────────────────────────────────────────────────────────
+
+  let qaItems    = [];
+  let qaUpvoted  = JSON.parse(localStorage.getItem('ccsk_qa_upvoted') || '{}');
+  let qaStarted  = false;
+  let qaInterval = null;
+
+  function qaInit() {
+    if (!qaStarted) {
+      qaStarted = true;
+      qaFetch();
+      qaInterval = setInterval(qaFetch, 20000);
+    }
+  }
+
+  async function qaFetch() {
+    if (!GS_URL) { renderQA(); return; }
+    try {
+      const res  = await fetch(GS_URL + '?type=qa&t=' + Date.now());
+      qaItems = await res.json();
+      renderQA();
+    } catch(e) {}
+  }
+  window.qaFetch = qaFetch;
+
+  function renderQA() {
+    const list  = document.getElementById('qa-list');
+    const empty = document.getElementById('qa-empty');
+    if (!qaItems.length) { list.innerHTML = ''; empty.classList.remove('d-none'); return; }
+    empty.classList.add('d-none');
+    list.innerHTML = qaItems.map(q => {
+      const voted = qaUpvoted[q.id];
+      return `<div class="qa-card">
+        <div class="qa-card-top">
+          <span class="qa-session-tag">${esc(q.session)}</span>
+          <button class="qa-upvote-btn ${voted ? 'voted' : ''}"
+            onclick="qaUpvote('${esc(q.id)}', this)" ${voted ? 'disabled' : ''}>
+            <i class="fas fa-chevron-up"></i>
+            <span class="up-count">${q.upvotes}</span>
+          </button>
+        </div>
+        <div class="qa-question">${esc(q.question)}</div>
+        <div class="qa-meta">
+          <span><i class="fas fa-user"></i> ${esc(q.name)}</span>
+          ${q.ts ? `<span><i class="fas fa-clock"></i> ${esc(q.ts)}</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.qaSubmit = async function() {
+    const session  = document.getElementById('qa-session').value.trim();
+    const question = document.getElementById('qa-question').value.trim();
+    const name     = document.getElementById('qa-name').value.trim() || 'Anonymous';
+
+    if (!session)  { qaShowMsg('Please select a session.', 'err'); return; }
+    if (!question) { qaShowMsg('Please type your question.', 'err'); return; }
+
+    const record = { action:'qa_submit', id:'qa_'+Date.now(), session, question, name,
+                     upvotes:0, ts: new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) };
+
+    qaItems.unshift(record);
+    renderQA();
+    document.getElementById('qa-question').value = '';
+    qaShowMsg('Question submitted! The chair will see it shortly.', 'ok');
+
+    if (GS_URL) {
+      try {
+        await fetch(GS_URL, { method:'POST', mode:'no-cors',
+          body: JSON.stringify(record), headers:{'Content-Type':'application/json'} });
+      } catch(e) {}
+    }
+  };
+
+  window.qaUpvote = async function(id, btn) {
+    if (qaUpvoted[id]) return;
+    qaUpvoted[id] = true;
+    localStorage.setItem('ccsk_qa_upvoted', JSON.stringify(qaUpvoted));
+    const q = qaItems.find(i => i.id === id);
+    if (q) q.upvotes++;
+    qaItems.sort((a,b) => b.upvotes - a.upvotes);
+    renderQA();
+    if (GS_URL) {
+      try {
+        await fetch(GS_URL, { method:'POST', mode:'no-cors',
+          body: JSON.stringify({ action:'qa_upvote', id }),
+          headers:{'Content-Type':'application/json'} });
+      } catch(e) {}
+    }
+  };
+
+  function qaShowMsg(text, type) {
+    const el = document.getElementById('qa-msg');
+    el.textContent = text; el.className = 'qa-msg ' + type;
+    el.classList.remove('d-none');
+    setTimeout(() => el.classList.add('d-none'), 5000);
+  }
+
+  // ── Push Notifications (OneSignal) ────────────────────────────────────────
+
+  window.requestNotifPerm = async function() {
+    if (!window.OneSignal) {
+      alert('Push notifications will be available once the OneSignal App ID is configured. Check back after setup.');
+      return;
+    }
+    try {
+      await OneSignal.Notifications.requestPermission();
+      const granted = await OneSignal.Notifications.permission;
+      const btn = document.getElementById('notif-btn');
+      const icon = document.getElementById('notif-icon');
+      const label = document.getElementById('notif-label');
+      if (granted) {
+        icon.className = 'fas fa-bell';
+        label.textContent = 'On';
+        btn.style.background = 'rgba(0,200,80,.3)';
+      }
+    } catch(e) {}
+  };
+
+  // Reflect existing subscription state on load
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    const granted = await OneSignal.Notifications.permission;
+    if (granted) {
+      const icon = document.getElementById('notif-icon');
+      const label = document.getElementById('notif-label');
+      if (icon) { icon.className = 'fas fa-bell'; label.textContent = 'On';
+        document.getElementById('notif-btn').style.background = 'rgba(0,200,80,.3)'; }
+    }
+  });
 
   window.castVote = async function(pollId, optionIndex) {
     if (pollVoted[pollId] !== undefined) return;
