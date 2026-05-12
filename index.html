@@ -311,19 +311,32 @@
     .qa-upvote-btn .up-count { font-weight:800; }
 
     /* ── Announcement Banner ── */
-    .announce-bar { background:#e65100; color:#fff;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; padding:10px 16px;
-      animation:slideDown .35s ease; }
+    .announce-bar {
+      background: linear-gradient(135deg, #b71c1c 0%, #e53935 50%, #b71c1c 100%);
+      background-size: 200% 200%;
+      animation: slideDown .4s ease, gradientShift 3s ease infinite;
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px 18px;
+      border-bottom: 3px solid #ff8a80;
+      box-shadow: 0 4px 20px rgba(183,28,28,.5);
+    }
     @keyframes slideDown { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
-    .announce-inner { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
-    .announce-dot { width:9px; height:9px; border-radius:50%; background:#fff;
-      flex-shrink:0; animation:blink-dot 1s ease-in-out infinite; }
-    #announce-text { font-size:.88rem; font-weight:700; line-height:1.4; }
-    .announce-close { background:rgba(255,255,255,.2); border:none; color:#fff;
-      border-radius:6px; padding:4px 9px; font-size:.85rem; cursor:pointer;
-      flex-shrink:0; transition:background .2s; }
-    .announce-close:hover { background:rgba(255,255,255,.35); }
+    @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    .announce-inner { display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
+    .announce-icon { font-size:1.4rem; flex-shrink:0; animation:shake .5s ease infinite alternate; }
+    @keyframes shake { from{transform:rotate(-8deg)} to{transform:rotate(8deg)} }
+    .announce-dot { width:10px; height:10px; border-radius:50%; background:#fff;
+      flex-shrink:0; animation:blink-dot .7s ease-in-out infinite; box-shadow:0 0 6px #fff; }
+    #announce-text { font-size:1rem; font-weight:800; line-height:1.4;
+      letter-spacing:.01em; text-shadow:0 1px 4px rgba(0,0,0,.3); }
+    .announce-label { font-size:.6rem; font-weight:900; letter-spacing:1.5px;
+      text-transform:uppercase; background:rgba(255,255,255,.25);
+      padding:2px 7px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+    .announce-close { background:rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.4);
+      color:#fff; border-radius:8px; padding:5px 11px; font-size:.85rem;
+      font-weight:700; cursor:pointer; flex-shrink:0; transition:background .2s; }
+    .announce-close:hover { background:rgba(255,255,255,.4); }
 
     /* ── Lost & Found ── */
     .lf-header { text-align:center; padding: 24px 0 8px; }
@@ -426,10 +439,12 @@
 <!-- Announcement Banner -->
 <div id="announce-bar" class="announce-bar d-none">
   <div class="announce-inner">
+    <span class="announce-icon">📢</span>
     <span class="announce-dot"></span>
+    <span class="announce-label">Announcement</span>
     <span id="announce-text"></span>
   </div>
-  <button class="announce-close" onclick="document.getElementById('announce-bar').classList.add('d-none')" aria-label="Dismiss">✕</button>
+  <button class="announce-close" onclick="document.getElementById('announce-bar').classList.add('d-none')" aria-label="Dismiss">✕ Dismiss</button>
 </div>
 
 <div class="theme-bar">
