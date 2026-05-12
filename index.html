@@ -1783,35 +1783,33 @@
 
   // ── Push Notifications (OneSignal) ────────────────────────────────────────
 
-  window.requestNotifPerm = async function() {
-    if (!window.OneSignal) {
-      alert('Push notifications will be available once the OneSignal App ID is configured. Check back after setup.');
-      return;
-    }
-    try {
-      await OneSignal.Notifications.requestPermission();
-      const granted = await OneSignal.Notifications.permission;
-      const btn = document.getElementById('notif-btn');
-      const icon = document.getElementById('notif-icon');
-      const label = document.getElementById('notif-label');
-      if (granted) {
-        icon.className = 'fas fa-bell';
-        label.textContent = 'On';
-        btn.style.background = 'rgba(0,200,80,.3)';
-      }
-    } catch(e) {}
+  function setNotifBtnOn() {
+    const btn = document.getElementById('notif-btn');
+    const icon = document.getElementById('notif-icon');
+    const label = document.getElementById('notif-label');
+    if (!btn) return;
+    icon.className = 'fas fa-bell';
+    label.textContent = 'On';
+    btn.style.background = 'rgba(0,200,80,.3)';
+    btn.onclick = null;
+    btn.title = 'Alerts enabled';
+  }
+
+  window.requestNotifPerm = function() {
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      try {
+        await OneSignal.Notifications.requestPermission();
+        const granted = OneSignal.Notifications.permission;
+        if (granted) setNotifBtnOn();
+      } catch(e) {}
+    });
   };
 
-  // Reflect existing subscription state on load
+  // Reflect existing subscription state once SDK loads
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
-    const granted = await OneSignal.Notifications.permission;
-    if (granted) {
-      const icon = document.getElementById('notif-icon');
-      const label = document.getElementById('notif-label');
-      if (icon) { icon.className = 'fas fa-bell'; label.textContent = 'On';
-        document.getElementById('notif-btn').style.background = 'rgba(0,200,80,.3)'; }
-    }
+    if (OneSignal.Notifications.permission) setNotifBtnOn();
   });
 
   window.castVote = async function(pollId, optionIndex) {
