@@ -6,14 +6,6 @@
   <title>CCSK 2026 — Scientific Program</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- OneSignal Web Push — replace YOUR_ONESIGNAL_APP_ID after creating your account at onesignal.com -->
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({ appId: "8ea92156-c6f3-4385-95d1-a6f3c41d2e51", notifyButton: { enable: false } });
-    });
-  </script>
   <style>
     :root {
       --blue:    #003087;
@@ -318,13 +310,20 @@
       background:#e8f0ff; cursor:default; }
     .qa-upvote-btn .up-count { font-weight:800; }
 
-    /* ── Notification bell ── */
-    .notif-btn { background:rgba(255,255,255,.15); border:none; border-radius:8px;
-      color:#fff; padding:6px 10px; cursor:pointer; font-size:.9rem;
-      transition:background .2s; display:flex; align-items:center; gap:5px; flex-shrink:0; }
-    .notif-btn:hover { background:rgba(255,255,255,.28); }
-    .notif-btn .nb-label { font-size:.65rem; font-weight:700; letter-spacing:.5px;
-      text-transform:uppercase; line-height:1; }
+    /* ── Announcement Banner ── */
+    .announce-bar { background:#e65100; color:#fff;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; padding:10px 16px;
+      animation:slideDown .35s ease; }
+    @keyframes slideDown { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .announce-inner { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+    .announce-dot { width:9px; height:9px; border-radius:50%; background:#fff;
+      flex-shrink:0; animation:blink-dot 1s ease-in-out infinite; }
+    #announce-text { font-size:.88rem; font-weight:700; line-height:1.4; }
+    .announce-close { background:rgba(255,255,255,.2); border:none; color:#fff;
+      border-radius:6px; padding:4px 9px; font-size:.85rem; cursor:pointer;
+      flex-shrink:0; transition:background .2s; }
+    .announce-close:hover { background:rgba(255,255,255,.35); }
 
     /* ── Lost & Found ── */
     .lf-header { text-align:center; padding: 24px 0 8px; }
@@ -404,15 +403,9 @@
         <div class="sub">13–15 May 2026 &nbsp;|&nbsp; Argyle Grand Hotel, Nairobi</div>
       </div>
     </div>
-    <div class="d-flex align-items-center gap-2">
-      <button class="notif-btn" id="notif-btn" onclick="requestNotifPerm()" title="Get session alerts">
-        <i class="fas fa-bell" id="notif-icon"></i>
-        <span class="nb-label" id="notif-label">Alerts</span>
-      </button>
-      <div class="sponsor-main">
-        <div class="sponsor-main-label">Main Sponsor</div>
-        <img src="logos/fresenius.png" alt="Fresenius Kabi">
-      </div>
+    <div class="sponsor-main">
+      <div class="sponsor-main-label">Main Sponsor</div>
+      <img src="logos/fresenius.png" alt="Fresenius Kabi">
     </div>
   </div>
   <!-- Day tabs -->
@@ -429,6 +422,15 @@
   </div>
   <div class="nav-swipe-hint" id="navSwipeHint">Swipe for Speakers · Lost &amp; Found · Live Poll · Ask <span class="arrow">👉</span></div>
 </header>
+
+<!-- Announcement Banner -->
+<div id="announce-bar" class="announce-bar d-none">
+  <div class="announce-inner">
+    <span class="announce-dot"></span>
+    <span id="announce-text"></span>
+  </div>
+  <button class="announce-close" onclick="document.getElementById('announce-bar').classList.add('d-none')" aria-label="Dismiss">✕</button>
+</div>
 
 <div class="theme-bar">
   <strong>FRUGAL INNOVATION</strong> &mdash; Evidence-Based, Locally Driven Solutions for a Global Future
@@ -1781,39 +1783,38 @@
     setTimeout(() => el.classList.add('d-none'), 5000);
   }
 
-  // ── Push Notifications (OneSignal) ────────────────────────────────────────
+  // ── Announcements ─────────────────────────────────────────────────────────
+  // Admin types a message in Google Sheets "Announcements" tab → appears here
+  // within 30 seconds on every delegate's screen.
 
-  let _OS = null;  // OneSignal instance, set once SDK initialises
+  let lastAnnounce = '';
 
-  function setNotifBtnOn() {
-    const btn   = document.getElementById('notif-btn');
-    const icon  = document.getElementById('notif-icon');
-    const label = document.getElementById('notif-label');
-    if (!btn) return;
-    icon.className  = 'fas fa-bell';
-    label.textContent = 'On';
-    btn.style.background = 'rgba(0,200,80,.3)';
-    btn.title = 'Alerts enabled';
-  }
-
-  window.requestNotifPerm = async function() {
-    const btn = document.getElementById('notif-btn');
-    if (btn) { btn.style.opacity = '.6'; btn.disabled = true; }
+  async function announcePoll() {
+    if (!GS_URL) return;
     try {
-      if (_OS) {
-        await _OS.Notifications.requestPermission();
-        if (_OS.Notifications.permission) setNotifBtnOn();
+      const res  = await fetch(GS_URL + '?type=announcement&t=' + Date.now());
+      const data = await res.json();
+      const bar  = document.getElementById('announce-bar');
+      const txt  = document.getElementById('announce-text');
+      if (data && data.active && data.message) {
+        if (data.message !== lastAnnounce) {
+          lastAnnounce = data.message;
+          txt.textContent = data.message;
+          bar.classList.remove('d-none');
+          // Re-trigger slide animation on new message
+          bar.style.animation = 'none';
+          bar.offsetHeight;
+          bar.style.animation = '';
+        }
+      } else {
+        lastAnnounce = '';
+        bar.classList.add('d-none');
       }
     } catch(e) {}
-    if (btn) { btn.style.opacity = '1'; btn.disabled = false; }
-  };
+  }
 
-  // Store instance and reflect existing state as soon as SDK is ready
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    _OS = OneSignal;
-    if (OneSignal.Notifications.permission) setNotifBtnOn();
-  });
+  announcePoll();
+  setInterval(announcePoll, 30000);
 
   window.castVote = async function(pollId, optionIndex) {
     if (pollVoted[pollId] !== undefined) return;

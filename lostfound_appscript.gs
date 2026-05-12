@@ -15,10 +15,11 @@
  * No admin action needed — just watch the sheet fill up during sessions.
  */
 
-const SH_NAME  = 'LostFound';
-const POLLS_SH = 'Polls';
-const VOTES_SH = 'Votes';
-const QA_SH    = 'QA';
+const SH_NAME    = 'LostFound';
+const POLLS_SH   = 'Polls';
+const VOTES_SH   = 'Votes';
+const QA_SH      = 'QA';
+const ANNOUNCE_SH = 'Announcements';
 
 // ── Sheet helpers ─────────────────────────────────────────────────────────────
 
@@ -72,10 +73,25 @@ function getQASheet() {
 
 // ── doGet — routes on ?type= ──────────────────────────────────────────────────
 
+function getAnnouncementSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(ANNOUNCE_SH);
+  if (!sh) {
+    sh = ss.insertSheet(ANNOUNCE_SH);
+    sh.appendRow(['message', 'active']);
+    sh.setFrozenRows(1);
+    sh.setColumnWidth(1, 400);
+    sh.setColumnWidth(2, 80);
+    sh.appendRow(['Welcome to CCSK 2026! Please collect your badge at the registration desk.', 'FALSE']);
+  }
+  return sh;
+}
+
 function doGet(e) {
   const type = (e && e.parameter && e.parameter.type) ? e.parameter.type : 'lostfound';
-  if (type === 'polls') return getPolls();
-  if (type === 'qa')    return getQA();
+  if (type === 'polls')        return getPolls();
+  if (type === 'qa')           return getQA();
+  if (type === 'announcement') return getAnnouncement();
 
   // Default: Lost & Found
   const sh   = getSheet();
@@ -87,6 +103,20 @@ function doGet(e) {
     resolved: r[7] === true || r[7] === 'TRUE', ts: r[8]
   })).reverse();
   return respond(rows);
+}
+
+// ── Announcement reader ───────────────────────────────────────────────────────
+
+function getAnnouncement() {
+  const sh   = getAnnouncementSheet();
+  const vals = sh.getDataRange().getValues();
+  // Find first active row
+  for (let i = 1; i < vals.length; i++) {
+    if (vals[i][1] === true || vals[i][1] === 'TRUE') {
+      return respond({ message: String(vals[i][0]), active: true });
+    }
+  }
+  return respond({ active: false });
 }
 
 // ── Poll reader ───────────────────────────────────────────────────────────────
