@@ -432,6 +432,7 @@
       <li class="nav-item"><button class="nav-link" onclick="showDay('lostfound')"><i class="fas fa-search me-1"></i><small>Lost &amp; Found</small></button></li>
       <li class="nav-item"><button class="nav-link" onclick="showDay('poll')"><i class="fas fa-chart-bar me-1"></i><small>Live Poll</small></button></li>
       <li class="nav-item"><button class="nav-link" onclick="showDay('qa')"><i class="fas fa-question-circle me-1"></i><small>Ask</small></button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showDay('booklet')"><i class="fas fa-book-open me-1"></i><small>Booklet</small></button></li>
     </ul>
   </div>
   <div class="nav-swipe-hint" id="navSwipeHint">Swipe for Speakers · Lost &amp; Found · Live Poll · Ask <span class="arrow">👉</span></div>
@@ -1102,6 +1103,17 @@
     </div>
   </div>
 
+  <!-- ── Booklet ── -->
+  <div id="day-booklet" class="d-none">
+    <div class="text-center my-3">
+      <a href="booklet.pdf" download="CCSK2026_Booklet.pdf"
+         class="btn btn-sm" style="background:var(--day-color);color:#fff;">
+        <i class="fas fa-download me-1"></i> Download Booklet
+      </a>
+    </div>
+    <iframe src="booklet.pdf" width="100%" style="height:80vh;border:none;border-radius:8px;"></iframe>
+  </div>
+
 </div>
 
 <footer>
@@ -1175,10 +1187,11 @@
     speakers: '#6a1b9a',   // purple     — Speakers
     poll:     '#c8102e',   // red        — Live Polls
     qa:       '#00695c',   // teal       — Q&A
+    booklet:  '#e65100',   // orange     — Booklet
   };
 
   function showDay(id) {
-    ['pre','day1','day2','speakers','lostfound','poll','qa'].forEach(d => {
+    ['pre','day1','day2','speakers','lostfound','poll','qa','booklet'].forEach(d => {
       document.getElementById('day-' + d).classList.add('d-none');
     });
     document.getElementById('day-' + id).classList.remove('d-none');
