@@ -67,7 +67,7 @@ const CCSK_SESSIONS = [
   { id:48, date:'2026-05-14', startTime:'15:10', endTime:'15:35', title:'Critical Care Without Walls', speaker:'Prof Jana Macleod', track:'C', type:'Lecture', room:'Victoria Hall 3', session:'Critical Care Within and Without' },
   { id:49, date:'2026-05-14', startTime:'15:35', endTime:'15:45', title:'Discussion', speaker:'', track:'C', type:'Lecture', room:'Victoria Hall 3', session:'Critical Care Within and Without' },
 
-  { id:50, date:'2026-05-14', startTime:'15:45', endTime:'16:15', title:'Tea Break & Poster Presentations', speaker:'', track:'all', type:'Coffee', room:'Exhibition Area' },
+  { id:50, date:'2026-05-14', startTime:'15:45', endTime:'16:15', title:'Tea Break & Poster Running', speaker:'', track:'all', type:'Coffee', room:'Exhibition Area' },
   { id:51, date:'2026-05-14', startTime:'16:15', endTime:'17:30', title:'Annual General Meeting (AGM)', speaker:'', track:'all', type:'Plenary', room:'Victoria Hall 1' },
 
   // ── CONFERENCE DAY 2: Friday 15 May 2026 ─────────────────────────────
@@ -114,7 +114,7 @@ const CCSK_SESSIONS = [
   { id:87, date:'2026-05-15', startTime:'14:45', endTime:'15:10', title:'Cardiac Arrest: Manual vs. Mechanical Ventilation', speaker:'Dr Benjamin Wachira', track:'C', type:'Lecture', room:'Victoria Hall 3', session:'Hot Topics in Critical Care' },
   { id:88, date:'2026-05-15', startTime:'15:10', endTime:'15:20', title:'Discussion', speaker:'', track:'C', type:'Lecture', room:'Victoria Hall 3', session:'Hot Topics in Critical Care' },
 
-  { id:89, date:'2026-05-15', startTime:'15:20', endTime:'15:50', title:'Evening Tea', speaker:'', track:'all', type:'Coffee', room:'' },
+  { id:89, date:'2026-05-15', startTime:'15:20', endTime:'15:50', title:'Tea Break & Poster Presentation / Judging', speaker:'', track:'all', type:'Coffee', room:'Exhibition Area' },
   { id:90, date:'2026-05-15', startTime:'19:00', endTime:'21:00', title:'Closing Ceremony & Gala Dinner', speaker:'', track:'all', type:'Plenary', room:'Main Hall' },
 ];
 
