@@ -1533,7 +1533,7 @@
         await fetch(GS_URL, {
           method: 'POST', mode: 'no-cors',
           body: JSON.stringify(record),
-          headers: {'Content-Type': 'application/json'}
+          headers: {'Content-Type': 'text/plain'}
         });
       } catch(e) { /* no-cors POST — response unreadable but request goes through */ }
     }
@@ -1551,7 +1551,7 @@
         await fetch(GS_URL, {
           method: 'POST', mode: 'no-cors',
           body: JSON.stringify({ action: 'resolve', id }),
-          headers: {'Content-Type': 'application/json'}
+          headers: {'Content-Type': 'text/plain'}
         });
       } catch(e) {}
     }
@@ -1783,7 +1783,7 @@
     if (GS_URL) {
       try {
         await fetch(GS_URL, { method:'POST', mode:'no-cors',
-          body: JSON.stringify(record), headers:{'Content-Type':'application/json'} });
+          body: JSON.stringify(record), headers:{'Content-Type':'text/plain'} });
       } catch(e) {}
     }
   };
@@ -1800,7 +1800,7 @@
       try {
         await fetch(GS_URL, { method:'POST', mode:'no-cors',
           body: JSON.stringify({ action:'qa_upvote', id }),
-          headers:{'Content-Type':'application/json'} });
+          headers:{'Content-Type':'text/plain'} });
       } catch(e) {}
     }
   };
@@ -1865,7 +1865,7 @@
           method: 'POST', mode: 'no-cors',
           body: JSON.stringify({ action: 'poll_vote', poll_id: pollId,
                                  option_index: optionIndex, device_id: DEVICE_ID }),
-          headers: {'Content-Type': 'application/json'}
+          headers: {'Content-Type': 'text/plain'}
         });
       } catch(e) {}
     }
